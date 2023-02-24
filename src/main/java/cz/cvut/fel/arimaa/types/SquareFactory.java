@@ -2,11 +2,10 @@ package cz.cvut.fel.arimaa.types;
 
 import cz.cvut.fel.arimaa.model.Board;
 
-import java.util.Objects;
-
 public class SquareFactory {
 
-    private static Square[][] squares = new Square[Board.WIDTH][Board.HEIGHT];
+    private static final Square[][] squares =
+            new Square[Board.WIDTH][Board.HEIGHT];
 
     private SquareFactory() {
     }
@@ -17,7 +16,7 @@ public class SquareFactory {
         }
 
         int x = repr.charAt(0) - 'a';
-        int y = Board.HEIGHT - repr.charAt(1) - '0';
+        int y = Board.HEIGHT - (repr.charAt(1) - '0');
 
         return getSquare(x, y);
     }
@@ -45,28 +44,15 @@ public class SquareFactory {
         }
 
         @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Square square = (Square) o;
-            return x == square.x && y == square.y;
-        }
-
-        @Override
         public String toString() {
-            return "" + getColumn() + getRow();
+            return getFile() + "" + getRank();
         }
 
-        public char getColumn() {
+        public char getFile() {
             return (char) ('a' + x);
         }
 
-        public int getRow() {
+        public int getRank() {
             return Board.HEIGHT - y;
         }
     }
