@@ -2,6 +2,8 @@ package cz.cvut.fel.arimaa.types;
 
 import cz.cvut.fel.arimaa.model.Board;
 
+import java.util.Objects;
+
 public class SquareFactory {
 
     private static final Square[][] squares =
@@ -41,6 +43,19 @@ public class SquareFactory {
         private Square(int x, int y) {
             this.x = x;
             this.y = y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Square square = (Square) o;
+            return x == square.x && y == square.y;
         }
 
         @Override

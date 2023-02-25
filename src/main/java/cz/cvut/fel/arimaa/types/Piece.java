@@ -1,5 +1,7 @@
 package cz.cvut.fel.arimaa.types;
 
+import java.util.Objects;
+
 public abstract class Piece {
 
     public final Color color;
@@ -22,5 +24,18 @@ public abstract class Piece {
         };
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRepr());
+    }
+
     public abstract char getRepr();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Piece piece = (Piece) o;
+        return getRepr() == piece.getRepr();
+    }
 }
