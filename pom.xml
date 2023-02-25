@@ -54,7 +54,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                cz.cvut.fel.arimaa/cz.cvut.fel.arimaa.HelloApplication
+                                cz.cvut.fel.arimaa.gui.App
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
