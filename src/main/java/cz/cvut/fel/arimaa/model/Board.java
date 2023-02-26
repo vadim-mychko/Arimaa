@@ -1,7 +1,11 @@
 package cz.cvut.fel.arimaa.model;
 
+import cz.cvut.fel.arimaa.types.Direction;
 import cz.cvut.fel.arimaa.types.Piece;
+import cz.cvut.fel.arimaa.types.Step;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
@@ -44,6 +48,7 @@ public class Board {
             getSquare("f3"), getSquare("c6"), getSquare("f6"));
 
     private final Piece[][] board;
+    private Step previousStep;
 
     Board() {
         board = new Piece[WIDTH][HEIGHT];
@@ -56,7 +61,10 @@ public class Board {
     boolean load(String positions) {
         reset();
         String[] lines = positions.split("\n");
-        if (lines.length != 11) {
+        if (lines.length != 11
+            || !lines[0].equals(" +-----------------+")
+            || !lines[9].equals(" +-----------------+")
+            || !lines[10].startsWith("   a b c d e f g h")) {
             return false;
         }
 
@@ -96,6 +104,48 @@ public class Board {
 
     boolean isTrap(Square pos) {
         return TRAPS.contains(pos);
+    }
+
+    public boolean isFrozenAt(Square pos) {
+        if (!isPieceAt(pos)) {
+            return false;
+        }
+
+        Piece piece = getPieceAt(pos);
+
+        boolean frozen = false;
+        for (Direction direction : Direction.values()) {
+            Square shifted = direction.shift(pos);
+            if (shifted == null || !isPieceAt(shifted)) {
+                continue;
+            }
+
+            Piece adjacentPiece = getPieceAt(shifted);
+            if (adjacentPiece.color == piece.color) {
+                frozen = false;
+                break;
+            } else if (adjacentPiece.isStronger(piece)) {
+                frozen = true;
+            }
+        }
+
+        return frozen;
+    }
+
+    public boolean isPieceAt(Square pos) {
+        return pos != null && board[pos.x][pos.y] != null;
+    }
+
+    public Piece getPieceAt(Square pos) {
+        return pos != null ? board[pos.x][pos.y] : null;
+    }
+
+    List<Step> getValidSteps(Square from) {
+        if (!isPieceAt(from)) {
+            return Collections.emptyList();
+        }
+
+        return getPieceAt(from).getValidSteps(this, from);
     }
 
     @Override

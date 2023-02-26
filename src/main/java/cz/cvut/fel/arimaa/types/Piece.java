@@ -1,6 +1,12 @@
 package cz.cvut.fel.arimaa.types;
 
+import cz.cvut.fel.arimaa.model.Board;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
 
 public abstract class Piece {
 
@@ -38,4 +44,19 @@ public abstract class Piece {
         Piece piece = (Piece) o;
         return getRepr() == piece.getRepr();
     }
+
+    public boolean isStronger(Piece piece) {
+        return getStrength() > piece.getStrength();
+    }
+
+    protected abstract int getStrength();
+
+    protected List<Step> getValidSteps(Board board, Square from,
+                                       Direction[] directions) {
+        
+        List<Step> steps = new ArrayList<>();
+        return steps;
+    }
+
+    public abstract List<Step> getValidSteps(Board board, Square from);
 }
