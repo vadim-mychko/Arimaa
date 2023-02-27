@@ -4,6 +4,8 @@ import cz.cvut.fel.arimaa.model.Board;
 
 import java.util.Objects;
 
+import static java.lang.Math.abs;
+
 public class SquareFactory {
 
     private static final Square[][] squares =
@@ -69,6 +71,14 @@ public class SquareFactory {
 
         public int getRank() {
             return Board.HEIGHT - y;
+        }
+
+        public boolean isAdjacentTo(Square square) {
+            if (square == null) {
+                return false;
+            }
+
+            return abs(x - square.x) + abs(y - square.y) == 1;
         }
     }
 }

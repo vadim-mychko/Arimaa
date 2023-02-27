@@ -2,7 +2,7 @@ package cz.cvut.fel.arimaa.types;
 
 import cz.cvut.fel.arimaa.model.Board;
 
-import java.util.List;
+import java.util.Set;
 
 import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
 
@@ -13,8 +13,15 @@ class Rabbit extends Piece {
     private static final Direction[] silverDirections
             = new Direction[]{Direction.NORTH, Direction.EAST, Direction.WEST};
 
-    Rabbit(Color color) {
+    private static final Rabbit goldRabbit = new Rabbit(Color.GOLD);
+    private static final Rabbit silverRabbit = new Rabbit(Color.SILVER);
+
+    private Rabbit(Color color) {
         super(color);
+    }
+
+    static Rabbit getInstance(Color color) {
+        return color == Color.GOLD ? goldRabbit : silverRabbit;
     }
 
     @Override
@@ -28,7 +35,7 @@ class Rabbit extends Piece {
     }
 
     @Override
-    public List<Step> getValidSteps(Board board, Square from) {
+    public Set<Step> getValidSteps(Board board, Square from) {
         return getValidSteps(board, from,
                 color == Color.GOLD ? goldDirections : silverDirections);
     }

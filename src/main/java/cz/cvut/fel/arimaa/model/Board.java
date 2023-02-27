@@ -1,5 +1,6 @@
 package cz.cvut.fel.arimaa.model;
 
+import cz.cvut.fel.arimaa.types.Color;
 import cz.cvut.fel.arimaa.types.Direction;
 import cz.cvut.fel.arimaa.types.Piece;
 import cz.cvut.fel.arimaa.types.Step;
@@ -44,8 +45,8 @@ public class Board {
                +-----------------+
                  a b c d e f g h""";
 
-    private static final Set<Square> TRAPS = Set.of(getSquare("c3"),
-            getSquare("f3"), getSquare("c6"), getSquare("f6"));
+    private static final List<Square> TRAPS = List.of(getSquare("c3"),
+                                                      getSquare("f3"), getSquare("c6"), getSquare("f6"));
 
     private final Piece[][] board;
     private Step previousStep;
@@ -95,6 +96,7 @@ public class Board {
     }
 
     void reset() {
+        previousStep = null;
         for (int row = 0; row < HEIGHT; ++row) {
             for (int col = 0; col < WIDTH; ++col) {
                 board[col][row] = null;
@@ -104,6 +106,35 @@ public class Board {
 
     boolean isTrap(Square pos) {
         return TRAPS.contains(pos);
+    }
+
+    public boolean isSafeAt(Square pos, Color color) {
+        if (!isTrap(pos)) {
+            return true;
+        }
+
+        boolean safe = false;
+        for (Direction direction : Direction.values()) {
+            Square shifted = direction.shift(pos);
+            if (shifted == null || !isPieceAt(shifted)) {
+                continue;
+            }
+
+            if (getPieceAt(shifted).color == color) {
+                safe = true;
+                break;
+            }
+        }
+
+        return safe;
+    }
+
+    public Piece getPieceAt(Square pos) {
+        return pos != null ? board[pos.x][pos.y] : null;
+    }
+
+    public boolean isPieceAt(Square pos) {
+        return pos != null && board[pos.x][pos.y] != null;
     }
 
     public boolean isFrozenAt(Square pos) {
@@ -132,20 +163,55 @@ public class Board {
         return frozen;
     }
 
-    public boolean isPieceAt(Square pos) {
-        return pos != null && board[pos.x][pos.y] != null;
+    boolean makeSteps(Step[] steps) {
+        for (Step step : steps) {
+            if (!makeStep(step)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    public Piece getPieceAt(Square pos) {
-        return pos != null ? board[pos.x][pos.y] : null;
+    boolean makeStep(Step step) {
+        if (!isValidStep(step)) {
+            return false;
+        }
+
+        if (step.removed) {
+            board[step.from.x][step.from.y] = null;
+        } else if (step.direction == null) {
+            board[step.from.x][step.from.y] = step.piece;
+        } else {
+            Square shifted = step.direction.shift(step.from);
+            board[shifted.x][shifted.y] = board[step.from.x][step.from.y];
+            board[step.from.x][step.from.y] = null;
+        }
+
+        previousStep = step;
+
+        return true;
     }
 
-    List<Step> getValidSteps(Square from) {
+    boolean isValidStep(Step step) {
+        if (step == null || step.piece == null || step.from == null) {
+            return false;
+        }
+
+        Set<Step> steps = getValidSteps(step.from);
+        return steps.contains(step);
+    }
+
+    Set<Step> getValidSteps(Square from) {
         if (!isPieceAt(from)) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
         return getPieceAt(from).getValidSteps(this, from);
+    }
+
+    public Step getPreviousStep() {
+        return previousStep;
     }
 
     @Override

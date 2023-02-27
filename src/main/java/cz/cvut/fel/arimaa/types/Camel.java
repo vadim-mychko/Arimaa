@@ -2,14 +2,21 @@ package cz.cvut.fel.arimaa.types;
 
 import cz.cvut.fel.arimaa.model.Board;
 
-import java.util.List;
+import java.util.Set;
 
 import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
 
 class Camel extends Piece {
 
-    Camel(Color color) {
+    private static final Camel goldCamel = new Camel(Color.GOLD);
+    private static final Camel silverCamel = new Camel(Color.SILVER);
+
+    private Camel(Color color) {
         super(color);
+    }
+
+    static Camel getInstance(Color color) {
+        return color == Color.GOLD ? goldCamel : silverCamel;
     }
 
     @Override
@@ -23,7 +30,7 @@ class Camel extends Piece {
     }
 
     @Override
-    public List<Step> getValidSteps(Board board, Square from) {
+    public Set<Step> getValidSteps(Board board, Square from) {
         return getValidSteps(board, from, Direction.values());
     }
 }

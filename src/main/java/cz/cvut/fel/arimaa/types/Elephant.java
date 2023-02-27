@@ -2,14 +2,21 @@ package cz.cvut.fel.arimaa.types;
 
 import cz.cvut.fel.arimaa.model.Board;
 
-import java.util.List;
+import java.util.Set;
 
 import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
 
 class Elephant extends Piece {
 
-    Elephant(Color color) {
+    private static final Elephant goldElephant = new Elephant(Color.GOLD);
+    private static final Elephant silverElephant = new Elephant(Color.SILVER);
+
+    private Elephant(Color color) {
         super(color);
+    }
+
+    static Elephant getInstance(Color color) {
+        return color == Color.GOLD ? goldElephant : silverElephant;
     }
 
     @Override
@@ -23,7 +30,7 @@ class Elephant extends Piece {
     }
 
     @Override
-    public List<Step> getValidSteps(Board board, Square from) {
+    public Set<Step> getValidSteps(Board board, Square from) {
         return getValidSteps(board, from, Direction.values());
     }
 }
