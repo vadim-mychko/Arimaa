@@ -67,18 +67,18 @@ public class Board {
             return false;
         }
 
-        for (int row = 0; row < HEIGHT; ++row) {
-            String next = lines[row + 1];
+        for (int y = 0; y < HEIGHT; ++y) {
+            String next = lines[y + 1];
             if (next.length() != 20
-                || !next.startsWith((HEIGHT - row) + "|")
+                || !next.startsWith((HEIGHT - y) + "|")
                 || !next.endsWith(" |")) {
                 return false;
             }
 
-            for (int col = 0; col < WIDTH; ++col) {
-                boolean isTrap = isTrap(getSquare(col, row));
-                char space = next.charAt(2 + 2 * col);
-                char repr = next.charAt(3 + 2 * col);
+            for (int x = 0; x < WIDTH; ++x) {
+                boolean isTrap = isTrap(getSquare(x, y));
+                char space = next.charAt(2 + 2 * x);
+                char repr = next.charAt(3 + 2 * x);
                 Piece piece = Piece.fromRepr(repr);
 
                 if (space != ' ' || (piece == null && repr != ' '
@@ -86,7 +86,7 @@ public class Board {
                     return false;
                 }
 
-                board[col][row] = piece;
+                board[x][y] = piece;
             }
         }
 
@@ -95,9 +95,9 @@ public class Board {
 
     void reset() {
         previousStep = null;
-        for (int row = 0; row < HEIGHT; ++row) {
-            for (int col = 0; col < WIDTH; ++col) {
-                board[col][row] = null;
+        for (int y = 0; y < HEIGHT; ++y) {
+            for (int x = 0; x < WIDTH; ++x) {
+                board[x][y] = null;
             }
         }
     }
@@ -204,6 +204,19 @@ public class Board {
         return getValidSteps(step.from).contains(step);
     }
 
+    public Set<Step> getValidSteps(Color color) {
+        Set<Step> validSteps = new HashSet<>();
+        for (int y = 0; y < HEIGHT; ++y) {
+            for (int x = 0; x < WIDTH; ++x) {
+                if (board[x][y] != null && board[x][y].color == color) {
+                    validSteps.addAll(getValidSteps(getSquare(x, y)));
+                }
+            }
+        }
+
+        return validSteps;
+    }
+
     Set<Step> getValidSteps(Square from) {
         if (!isPieceAt(from)) {
             return Collections.emptySet();
@@ -239,14 +252,14 @@ public class Board {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(EMPTY_BOARD);
-        for (int row = 0; row < HEIGHT; ++row) {
-            for (int col = 0; col < WIDTH; ++col) {
-                if (board[col][row] == null) {
+        for (int y = 0; y < HEIGHT; ++y) {
+            for (int x = 0; x < WIDTH; ++x) {
+                if (board[x][y] == null) {
                     continue;
                 }
 
-                int index = 24 + 21 * row + 2 * col;
-                builder.setCharAt(index, board[col][row].getRepr());
+                int index = 24 + 21 * y + 2 * x;
+                builder.setCharAt(index, board[x][y].getRepr());
             }
         }
 
