@@ -1,11 +1,9 @@
 package cz.cvut.fel.arimaa.model;
 
-import cz.cvut.fel.arimaa.types.Color;
-import cz.cvut.fel.arimaa.types.Direction;
-import cz.cvut.fel.arimaa.types.Piece;
-import cz.cvut.fel.arimaa.types.Step;
+import cz.cvut.fel.arimaa.types.*;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -198,8 +196,12 @@ public class Board {
             return false;
         }
 
-        Set<Step> steps = getValidSteps(step.from);
-        return steps.contains(step);
+        return step.type == StepType.SIMPLE
+                ? isValidSimpleStep(step) : isValidNonSimpleStep(step);
+    }
+
+    private boolean isValidSimpleStep(Step step) {
+        return getValidSteps(step.from).contains(step);
     }
 
     Set<Step> getValidSteps(Square from) {
@@ -208,6 +210,26 @@ public class Board {
         }
 
         return getPieceAt(from).getValidSteps(this, from);
+    }
+
+    private boolean isValidNonSimpleStep(Step step) {
+        Set<Step> validSteps = new HashSet<>();
+        Square lookAt = step.type == StepType.PULL
+                ? step.getDestination() : step.from;
+
+        for (Direction direction : Direction.values()) {
+            Square shifted = direction.shift(lookAt);
+            Piece enemy = getPieceAt(shifted);
+            if (enemy == null
+                || step.piece.color == enemy.color
+                || !enemy.isStronger(step.piece)) {
+                continue;
+            }
+
+            validSteps.addAll(getValidSteps(shifted));
+        }
+
+        return validSteps.contains(step);
     }
 
     public Step getPreviousStep() {

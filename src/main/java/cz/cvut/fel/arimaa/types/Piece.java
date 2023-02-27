@@ -130,8 +130,6 @@ public abstract class Piece {
     private void addPullSteps(Board board, Square from,
                               Direction[] directions, Set<Step> steps) {
 
-        /* TODO: FIX GETTER FOR PULLING STEPS */
-
         Step previousStep = board.getPreviousStep();
         if (previousStep == null
             || board.isPieceAt(previousStep.from)
@@ -150,7 +148,7 @@ public abstract class Piece {
                 continue;
             }
 
-            boolean removed = board.isSafeAt(previousStep.from, enemy.color);
+            boolean removed = !board.isSafeAt(previousStep.from, enemy.color);
             Direction pullingDirection =
                     Direction.getOppositeDirection(direction);
 
