@@ -4,8 +4,6 @@ import cz.cvut.fel.arimaa.model.Board;
 
 import java.util.Set;
 
-import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
-
 class Elephant extends Piece {
 
     private static final Elephant goldElephant = new Elephant(Color.GOLD);

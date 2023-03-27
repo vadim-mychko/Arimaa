@@ -7,8 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
-import static cz.cvut.fel.arimaa.types.SquareFactory.getSquare;
+import static cz.cvut.fel.arimaa.types.Square.getSquare;
 
 public class Board {
 
@@ -17,34 +16,34 @@ public class Board {
 
     static final String EMPTY_BOARD
             = """
-               +-----------------+
-              8|                 |
-              7|                 |
-              6|     x     x     |
-              5|                 |
-              4|                 |
-              3|     x     x     |
-              2|                 |
-              1|                 |
-               +-----------------+
-                 a b c d e f g h""";
+             +-----------------+
+            8|                 |
+            7|                 |
+            6|     x     x     |
+            5|                 |
+            4|                 |
+            3|     x     x     |
+            2|                 |
+            1|                 |
+             +-----------------+
+               a b c d e f g h""";
 
     static final String DEFAULT_BOARD
             = """
-               +-----------------+
-              8| r r r r r r r r |
-              7| d h c e m c h d |
-              6|     x     x     |
-              5|                 |
-              4|                 |
-              3|     x     x     |
-              2| D H C E M C H D |
-              1| R R R R R R R R |
-               +-----------------+
-                 a b c d e f g h""";
+             +-----------------+
+            8| r r r r r r r r |
+            7| d h c e m c h d |
+            6|     x     x     |
+            5|                 |
+            4|                 |
+            3|     x     x     |
+            2| D H C E M C H D |
+            1| R R R R R R R R |
+             +-----------------+
+               a b c d e f g h""";
 
     private static final List<Square> TRAPS = List.of(getSquare("c3"),
-                                                      getSquare("f3"), getSquare("c6"), getSquare("f6"));
+            getSquare("f3"), getSquare("c6"), getSquare("f6"));
 
     private final Piece[][] board;
     private Step previousStep;
@@ -61,17 +60,17 @@ public class Board {
         reset();
         String[] lines = positions.split("\n");
         if (lines.length != 11
-            || !lines[0].equals(" +-----------------+")
-            || !lines[9].equals(" +-----------------+")
-            || !lines[10].startsWith("   a b c d e f g h")) {
+                || !lines[0].equals(" +-----------------+")
+                || !lines[9].equals(" +-----------------+")
+                || !lines[10].startsWith("   a b c d e f g h")) {
             return false;
         }
 
         for (int y = 0; y < HEIGHT; ++y) {
             String next = lines[y + 1];
             if (next.length() != 20
-                || !next.startsWith((HEIGHT - y) + "|")
-                || !next.endsWith(" |")) {
+                    || !next.startsWith((HEIGHT - y) + "|")
+                    || !next.endsWith(" |")) {
                 return false;
             }
 
@@ -82,7 +81,7 @@ public class Board {
                 Piece piece = Piece.fromRepr(repr);
 
                 if (space != ' ' || (piece == null && repr != ' '
-                                     && repr != (isTrap ? 'x' : ' '))) {
+                        && repr != (isTrap ? 'x' : ' '))) {
                     return false;
                 }
 
@@ -234,8 +233,8 @@ public class Board {
             Square shifted = direction.shift(lookAt);
             Piece enemy = getPieceAt(shifted);
             if (enemy == null
-                || step.piece.color == enemy.color
-                || !enemy.isStronger(step.piece)) {
+                    || step.piece.color == enemy.color
+                    || !enemy.isStronger(step.piece)) {
                 continue;
             }
 

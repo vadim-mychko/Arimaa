@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
-
 public abstract class Piece {
 
     public final Color color;
@@ -65,13 +63,13 @@ public abstract class Piece {
 
         Step previousStep = board.getPreviousStep();
         if (previousStep != null
-            && previousStep.type == StepType.PUSH
-            && from.isAdjacentTo(previousStep.from)) {
+                && previousStep.type == StepType.PUSH
+                && from.isAdjacentTo(previousStep.from)) {
 
             Direction direction = Direction.getDirection(from, previousStep.from);
             boolean removed = !board.isSafeAt(previousStep.from, color);
             steps.add(new Step(this, from, direction, removed,
-                               StepType.SIMPLE));
+                    StepType.SIMPLE));
 
             return;
         }
@@ -85,7 +83,7 @@ public abstract class Piece {
             if (!board.isPieceAt(shifted)) {
                 boolean removed = !board.isSafeAt(shifted, color);
                 steps.add(new Step(this, from, direction, removed,
-                                   StepType.SIMPLE));
+                        StepType.SIMPLE));
             }
         }
     }
@@ -95,7 +93,7 @@ public abstract class Piece {
 
         Step previousStep = board.getPreviousStep();
         if (board.isFrozenAt(from)
-            || (previousStep != null
+                || (previousStep != null
                 && board.getPreviousStep().type == StepType.PUSH)) {
             return;
         }
@@ -116,7 +114,7 @@ public abstract class Piece {
 
                 boolean removed = !board.isSafeAt(pushingPos, enemy.color);
                 steps.add(new Step(enemy, shifted, pushingDirection, removed,
-                                   StepType.PUSH));
+                        StepType.PUSH));
             }
         }
     }
@@ -132,10 +130,10 @@ public abstract class Piece {
 
         Step previousStep = board.getPreviousStep();
         if (previousStep == null
-            || board.isPieceAt(previousStep.from)
-            || previousStep.type == StepType.PUSH
-            || previousStep.type == StepType.PULL
-            || !previousStep.getDestination().equals(from)) {
+                || board.isPieceAt(previousStep.from)
+                || previousStep.type == StepType.PUSH
+                || previousStep.type == StepType.PULL
+                || !previousStep.getDestination().equals(from)) {
             return;
         }
 
@@ -143,8 +141,8 @@ public abstract class Piece {
             Square shifted = direction.shift(previousStep.from);
             Piece enemy = board.getPieceAt(shifted);
             if (enemy == null
-                || color == enemy.color
-                || !isStronger(enemy)) {
+                    || color == enemy.color
+                    || !isStronger(enemy)) {
                 continue;
             }
 
@@ -153,7 +151,7 @@ public abstract class Piece {
                     Direction.getOppositeDirection(direction);
 
             steps.add(new Step(enemy, shifted, pullingDirection, removed,
-                               StepType.PULL));
+                    StepType.PULL));
         }
     }
 

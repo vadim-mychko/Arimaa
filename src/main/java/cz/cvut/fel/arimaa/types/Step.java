@@ -4,9 +4,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
-import static cz.cvut.fel.arimaa.types.SquareFactory.getSquare;
-
 public class Step {
 
     public final Piece piece;
@@ -43,7 +40,7 @@ public class Step {
         }
 
         Piece piece = Piece.fromRepr(matcher.group(1).charAt(0));
-        Square from = getSquare(matcher.group(2));
+        Square from = Square.getSquare(matcher.group(2));
         Direction direction = matcher.group(3).equals("")
                 ? null : Direction.fromRepr(matcher.group(3).charAt(0));
         boolean removed = matcher.group(4).equals("x");
@@ -67,10 +64,10 @@ public class Step {
         if (o == null || getClass() != o.getClass()) return false;
         Step step = (Step) o;
         return removed == step.removed
-               && piece.equals(step.piece)
-               && from.equals(step.from)
-               && direction == step.direction
-               && type == step.type;
+                && piece.equals(step.piece)
+                && from.equals(step.from)
+                && direction == step.direction
+                && type == step.type;
     }
 
     @Override
@@ -80,7 +77,7 @@ public class Step {
 
     public String getRepr() {
         return "" + piece.getRepr() + from
-               + (direction != null ? direction.repr : "")
-               + (removed ? "x" : "");
+                + (direction != null ? direction.repr : "")
+                + (removed ? "x" : "");
     }
 }

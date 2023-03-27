@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static cz.cvut.fel.arimaa.types.SquareFactory.getSquare;
+import static cz.cvut.fel.arimaa.types.Square.getSquare;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BoardTest {
@@ -39,23 +39,23 @@ public class BoardTest {
         Board board = new Board();
         board.load();
         String[] stepStrs = {"Ed2ns", "Ed3ws", "Ec3ns", "Ec4ns", "Ec5ws",
-                             "Eb5ns", "Eb6ss", "hb7sl", "hb6eh", "Eb5ns"};
+                "Eb5ns", "Eb6ss", "hb7sl", "hb6eh", "Eb5ns"};
         Step[] steps = Step.fromStrings(stepStrs);
         board.makeSteps(steps);
 
         String expected
                 = """
-                   +-----------------+
-                  8| r r r r r r r r |
-                  7| d   c e m c h d |
-                  6|   E h     x     |
-                  5|                 |
-                  4|                 |
-                  3|     x     x     |
-                  2| D H C   M C H D |
-                  1| R R R R R R R R |
-                   +-----------------+
-                     a b c d e f g h""";
+                 +-----------------+
+                8| r r r r r r r r |
+                7| d   c e m c h d |
+                6|   E h     x     |
+                5|                 |
+                4|                 |
+                3|     x     x     |
+                2| D H C   M C H D |
+                1| R R R R R R R R |
+                 +-----------------+
+                   a b c d e f g h""";
 
         assertEquals(expected, board.toString());
     }

@@ -1,7 +1,5 @@
 package cz.cvut.fel.arimaa.types;
 
-import static cz.cvut.fel.arimaa.types.SquareFactory.Square;
-
 public enum Direction {
 
     NORTH('n', 0, -1),
@@ -53,6 +51,6 @@ public enum Direction {
     }
 
     public Square shift(Square pos) {
-        return SquareFactory.getSquare(pos.x + dx, pos.y + dy);
+        return Square.getSquare(pos.x + dx, pos.y + dy);
     }
 }
