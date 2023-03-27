@@ -82,8 +82,7 @@ public abstract class Piece {
 
             if (!board.isPieceAt(shifted)) {
                 boolean removed = !board.isSafeAt(shifted, color);
-                steps.add(new Step(this, from, direction, removed,
-                        StepType.SIMPLE));
+                steps.add(new Step(this, from, direction, removed, StepType.SIMPLE));
             }
         }
     }
@@ -113,8 +112,7 @@ public abstract class Piece {
                 }
 
                 boolean removed = !board.isSafeAt(pushingPos, enemy.color);
-                steps.add(new Step(enemy, shifted, pushingDirection, removed,
-                        StepType.PUSH));
+                steps.add(new Step(enemy, shifted, pushingDirection, removed, StepType.PUSH));
             }
         }
     }

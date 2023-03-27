@@ -75,6 +75,7 @@ public class Game {
 
         Set<Step> validSteps = board.getValidSteps(from);
         Step nextStep = validSteps.stream()
+                .filter(step -> board.getPieceAt(step.from).color == currentTurn)
                 .filter(step -> step.getDestination().equals(to))
                 .findFirst()
                 .orElse(null);
