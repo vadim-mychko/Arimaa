@@ -26,7 +26,7 @@ class GameView extends BorderPane {
 
     private void addButtons() {
         VBox buttonPanel = new VBox();
-        Button newGame = new Button("+");
+        Button newGame = new Button("New Game");
 
         newGame.setOnMouseClicked(e -> controller.onNewGameClicked());
 
@@ -83,7 +83,7 @@ class GameView extends BorderPane {
 
             String pieceName = piece.toString();
             if (!images.containsKey(pieceName)) {
-                String filename = pieceName + ".svg";
+                String filename = pieceName + ".png";
                 images.put(pieceName,
                         new Image(getClass().getResourceAsStream(filename)));
             }

@@ -21,6 +21,7 @@ class GameController {
     }
 
     void onSquareClicked(Square square) {
+        System.out.println("here");
         if (previousSquare == null) {
             previousSquare = square;
             return;
