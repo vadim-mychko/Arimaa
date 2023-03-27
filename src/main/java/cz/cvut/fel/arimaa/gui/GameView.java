@@ -3,6 +3,7 @@ package cz.cvut.fel.arimaa.gui;
 import cz.cvut.fel.arimaa.model.Board;
 import cz.cvut.fel.arimaa.types.Piece;
 import cz.cvut.fel.arimaa.types.Square;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -17,9 +18,20 @@ class GameView extends BorderPane {
 
     GameView() {
         super();
-        this.controller = new GameController(this);
         this.boardView = new BoardView();
+        this.controller = new GameController(this);
         setCenter(boardView);
+        addButtons();
+    }
+
+    private void addButtons() {
+        VBox buttonPanel = new VBox();
+        Button newGame = new Button("+");
+
+        newGame.setOnMouseClicked(e -> controller.onNewGameClicked());
+
+        buttonPanel.getChildren().add(newGame);
+        setTop(buttonPanel);
     }
 
     void update(Board board) {
@@ -39,7 +51,7 @@ class GameView extends BorderPane {
             addTiles();
         }
 
-        void addBackground() {
+        private void addBackground() {
             Image image = new Image(getClass().getResourceAsStream("Board.jpg"));
             BackgroundSize size = new BackgroundSize(getWidth(), getHeight(),
                     true, true, true, false);
@@ -49,7 +61,7 @@ class GameView extends BorderPane {
             setBackground(new Background(backgroundImage));
         }
 
-        void addTiles() {
+        private void addTiles() {
             for (int y = 0; y < Board.HEIGHT; ++y) {
                 for (int x = 0; x < Board.WIDTH; ++x) {
                     ImageView tile = new ImageView();
@@ -58,24 +70,25 @@ class GameView extends BorderPane {
 
                     int col = x;
                     int row = y;
-                    tile.setOnMouseClicked(e -> {
-                        controller.onSquareSelected(Square.getSquare(col, row));
-                    });
+                    tile.setOnMouseClicked(e ->
+                            controller.onSquareClicked(Square.getSquare(col, row)));
                 }
             }
         }
 
-        Image getPieceImage(Piece piece) {
+        private Image getPieceImage(Piece piece) {
             if (piece == null) {
                 return null;
             }
 
-            String url = piece.toString() + ".svg";
-            if (!images.containsKey(url)) {
-                images.put(url, new Image(getClass().getResourceAsStream(url)));
+            String pieceName = piece.toString();
+            if (!images.containsKey(pieceName)) {
+                String filename = pieceName + ".svg";
+                images.put(pieceName,
+                        new Image(getClass().getResourceAsStream(filename)));
             }
 
-            return images.get(url);
+            return images.get(pieceName);
         }
 
         void update(Board board) {

@@ -15,7 +15,12 @@ class GameController {
         previousSquare = null;
     }
 
-    void onSquareSelected(Square square) {
+    void onNewGameClicked() {
+        game.reset();
+        view.update(game.getBoard());
+    }
+
+    void onSquareClicked(Square square) {
         if (previousSquare == null) {
             previousSquare = square;
             return;

@@ -19,7 +19,7 @@ public class Game {
 
     public Game() {
         board = new Board();
-        board.load();
+        board.load(Board.EMPTY_BOARD);
         moves = new ArrayList<>();
         currentMove = new Move();
         numberOfSteps = 0;
@@ -36,6 +36,14 @@ public class Game {
 
     public void setGameType(GameType gameType) {
         this.gameType = gameType;
+    }
+
+    public void reset() {
+        board.load();
+        moves.clear();
+        currentMove = new Move();
+        numberOfSteps = 0;
+        running = true;
     }
 
     public boolean finishMakingSteps() {
