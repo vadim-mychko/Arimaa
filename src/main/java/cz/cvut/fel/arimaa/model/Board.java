@@ -52,6 +52,10 @@ public class Board {
         board = new Piece[WIDTH][HEIGHT];
     }
 
+    public static boolean isTrap(Square pos) {
+        return TRAPS.contains(pos);
+    }
+
     void load() {
         load(DEFAULT_BOARD);
     }
@@ -99,10 +103,6 @@ public class Board {
                 board[x][y] = null;
             }
         }
-    }
-
-    boolean isTrap(Square pos) {
-        return TRAPS.contains(pos);
     }
 
     public boolean isSafeAt(Square pos, Color color) {

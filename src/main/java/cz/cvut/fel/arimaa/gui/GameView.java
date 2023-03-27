@@ -20,17 +20,20 @@ class GameView extends BorderPane {
         super();
         this.boardView = new BoardView();
         this.controller = new GameController(this);
-        setCenter(boardView);
+        setMinSize(800, 800);
+        setLeft(boardView);
         addButtons();
     }
 
     private void addButtons() {
-        VBox buttonPanel = new VBox();
+        HBox buttonPanel = new HBox();
         Button newGame = new Button("New Game");
+        Button makeMove = new Button("Make Move");
 
         newGame.setOnMouseClicked(e -> controller.onNewGameClicked());
+        makeMove.setOnMouseClicked(e -> controller.onMakeMoveClicked());
 
-        buttonPanel.getChildren().add(newGame);
+        buttonPanel.getChildren().addAll(newGame, makeMove);
         setTop(buttonPanel);
     }
 
@@ -52,26 +55,29 @@ class GameView extends BorderPane {
         }
 
         private void addBackground() {
-            Image image = new Image(getClass().getResourceAsStream("Board.jpg"));
-            BackgroundSize size = new BackgroundSize(getWidth(), getHeight(),
-                    true, true, true, false);
-            BackgroundImage backgroundImage = new BackgroundImage(image,
-                    BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.DEFAULT, size);
+            Image image = new Image(getClass().getResourceAsStream("Board.png"));
+            double width = image.getWidth() - Board.WIDTH / 2.0;
+            double height = image.getHeight() - Board.HEIGHT / 2.0;
+            setMinSize(width, height);
+            setMaxSize(width, height);
+            BackgroundImage backgroundImage =
+                    new BackgroundImage(image, null, null, null, null);
             setBackground(new Background(backgroundImage));
         }
 
         private void addTiles() {
             for (int y = 0; y < Board.HEIGHT; ++y) {
                 for (int x = 0; x < Board.WIDTH; ++x) {
+                    Square square = Square.getSquare(x, y);
                     ImageView tile = new ImageView();
+                    tile.fitWidthProperty().bind(widthProperty().divide(Board.WIDTH));
+                    tile.fitHeightProperty().bind(heightProperty().divide(Board.HEIGHT));
+                    tile.setPickOnBounds(true);
+                    tile.setOnMouseClicked(e ->
+                            controller.onSquareClicked(square));
+
                     tiles[x][y] = tile;
                     add(tile, x, y);
-
-                    int col = x;
-                    int row = y;
-                    tile.setOnMouseClicked(e ->
-                            controller.onSquareClicked(Square.getSquare(col, row)));
                 }
             }
         }
@@ -84,8 +90,8 @@ class GameView extends BorderPane {
             String pieceName = piece.toString();
             if (!images.containsKey(pieceName)) {
                 String filename = pieceName + ".png";
-                images.put(pieceName,
-                        new Image(getClass().getResourceAsStream(filename)));
+                Image image = new Image(getClass().getResourceAsStream(filename));
+                images.put(pieceName, image);
             }
 
             return images.get(pieceName);

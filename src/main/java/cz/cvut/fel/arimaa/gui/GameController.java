@@ -20,15 +20,19 @@ class GameController {
         view.update(game.getBoard());
     }
 
+    void onMakeMoveClicked() {
+        if (game.finishMakingSteps()) {
+            view.update(game.getBoard());
+        }
+    }
+
     void onSquareClicked(Square square) {
-        System.out.println("here");
         if (previousSquare == null) {
             previousSquare = square;
             return;
         }
 
-        boolean madeStep = game.makeStep(previousSquare, square);
-        if (madeStep) {
+        if (game.makeStep(previousSquare, square)) {
             view.update(game.getBoard());
         }
 
