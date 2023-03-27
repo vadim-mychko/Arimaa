@@ -160,6 +160,22 @@ public class Board {
         return frozen;
     }
 
+    boolean makeMove(Move move) {
+        if (move == null || move.steps[0] == null) {
+            return false;
+        }
+
+        boolean made = true;
+        for (int i = 0; i < Move.MAX_STEPS; ++i) {
+            if (move.steps[i] == null
+                    || !(made = makeStep(move.steps[i]))) {
+                break;
+            }
+        }
+
+        return made;
+    }
+
     boolean makeSteps(Step[] steps) {
         for (Step step : steps) {
             if (!makeStep(step)) {
@@ -258,6 +274,63 @@ public class Board {
         }
 
         return copied;
+    }
+
+    private boolean rabbitReachedGoal(Color color) {
+        int goal = color == Color.GOLD ? 0 : HEIGHT - 1;
+        char repr = color == Color.GOLD ? 'R' : 'r';
+        for (int x = 0; x < WIDTH; ++x) {
+            if (board[x][goal].getRepr() == repr) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean lostAllRabbits(Color color) {
+        char repr = color == Color.GOLD ? 'R' : 'r';
+        for (int y = 0; y < HEIGHT; ++y) {
+            for (int x = 0; x < WIDTH; ++x) {
+                if (board[x][y].getRepr() == repr) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private boolean hasPossibleSteps(Color color) {
+        return !getValidSteps(color).isEmpty();
+    }
+
+    GameResult getGameResult(Color player) {
+        Color opponent = Color.getOpposingColor(player);
+        GameResult playerWins = GameResult.fromColor(player);
+        GameResult opponentWins = GameResult.fromColor(opponent);
+
+        if (rabbitReachedGoal(player)) {
+            return playerWins;
+        }
+
+        if (rabbitReachedGoal(opponent)) {
+            return opponentWins;
+        }
+
+        if (lostAllRabbits(opponent)) {
+            return playerWins;
+        }
+
+        if (lostAllRabbits(player)) {
+            return opponentWins;
+        }
+
+        if (!hasPossibleSteps(opponent)) {
+            return playerWins;
+        }
+
+        return GameResult.NONE;
     }
 
     @Override

@@ -37,6 +37,20 @@ public class Move {
         System.arraycopy(steps, 0, this.steps, 0, length);
     }
 
+    public boolean hasSteps() {
+        return steps[0] != null;
+    }
+
+    public Step getLast() {
+        for (int i = MAX_STEPS - 1; i >= 0; --i) {
+            if (steps[i] != null) {
+                return steps[i];
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
