@@ -22,6 +22,10 @@ class GameView extends BorderPane {
         setCenter(boardView);
     }
 
+    void update(Board board) {
+        boardView.update(board);
+    }
+
     private class BoardView extends GridPane {
 
         private Map<String, Image> images;
@@ -51,6 +55,12 @@ class GameView extends BorderPane {
                     ImageView tile = new ImageView();
                     tiles[x][y] = tile;
                     add(tile, x, y);
+
+                    int col = x;
+                    int row = y;
+                    tile.setOnMouseClicked(e -> {
+                        controller.onSquareSelected(Square.getSquare(col, row));
+                    });
                 }
             }
         }

@@ -82,6 +82,10 @@ public class Game {
         return true;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public GameResult getGameResult() {
         Color previousPlayer = Color.getOpposingColor(currentTurn);
         GameResult result = board.getGameResult(previousPlayer);
