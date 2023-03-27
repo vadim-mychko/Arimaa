@@ -248,6 +248,18 @@ public class Board {
         return previousStep;
     }
 
+    public Board getCopy() {
+        Board copied = new Board();
+        copied.previousStep = previousStep;
+        for (int y = 0; y < HEIGHT; ++y) {
+            for (int x = 0; x < WIDTH; ++x) {
+                copied.board[x][y] = board[x][y];
+            }
+        }
+
+        return copied;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(EMPTY_BOARD);

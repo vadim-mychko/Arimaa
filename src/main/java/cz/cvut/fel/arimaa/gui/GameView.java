@@ -31,7 +31,11 @@ class GameView extends BorderPane {
             super();
             images = new HashMap<>();
             tiles = new ImageView[Board.WIDTH][Board.HEIGHT];
+            addBackground();
+            addTiles();
+        }
 
+        void addBackground() {
             Image image = new Image(getClass().getResourceAsStream("Board.jpg"));
             BackgroundSize size = new BackgroundSize(getWidth(), getHeight(),
                     true, true, true, false);
@@ -39,11 +43,14 @@ class GameView extends BorderPane {
                     BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                     BackgroundPosition.DEFAULT, size);
             setBackground(new Background(backgroundImage));
+        }
 
+        void addTiles() {
             for (int y = 0; y < Board.HEIGHT; ++y) {
                 for (int x = 0; x < Board.WIDTH; ++x) {
-                    tiles[x][y] = new ImageView();
-                    add(tiles[x][y], x, y);
+                    ImageView tile = new ImageView();
+                    tiles[x][y] = tile;
+                    add(tile, x, y);
                 }
             }
         }
