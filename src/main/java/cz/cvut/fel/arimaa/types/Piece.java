@@ -156,4 +156,9 @@ public abstract class Piece {
     }
 
     public abstract Set<Step> getValidSteps(Board board, Square from);
+
+    @Override
+    public String toString() {
+        return color.toString() + getClass().getSimpleName();
+    }
 }

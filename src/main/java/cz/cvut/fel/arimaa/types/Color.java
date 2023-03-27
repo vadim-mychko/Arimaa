@@ -16,4 +16,12 @@ public enum Color {
             case SILVER -> GOLD;
         };
     }
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case GOLD -> "Gold";
+            case SILVER -> "Silver";
+        };
+    }
 }
