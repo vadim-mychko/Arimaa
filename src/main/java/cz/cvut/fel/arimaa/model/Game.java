@@ -2,16 +2,12 @@ package cz.cvut.fel.arimaa.model;
 
 import cz.cvut.fel.arimaa.types.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class Game {
 
     private Board board;
-    private List<Move> moves;
-    private Move currentMove;
-    private Color currentTurn;
+    private Color currentPlayer;
     private int numberOfSteps;
     private Engine engine;
     private GameType gameType;
@@ -20,10 +16,8 @@ public class Game {
     public Game() {
         board = new Board();
         board.load(Board.EMPTY_BOARD);
-        moves = new ArrayList<>();
-        currentMove = new Move();
         numberOfSteps = 0;
-        currentTurn = Color.GOLD;
+        currentPlayer = Color.GOLD;
         engine = new Engine(new RandomStrategy());
         gameType = GameType.HUMAN_COMPUTER;
         running = true;
@@ -40,29 +34,23 @@ public class Game {
 
     public void reset() {
         board.load();
-        moves.clear();
-        currentMove = new Move();
         numberOfSteps = 0;
         running = true;
     }
 
     public boolean finishMakingSteps() {
-        if (!running || (currentMove.hasSteps()
-                && currentMove.getLast().type == StepType.PUSH)) {
+        if (!running || numberOfSteps <= 0
+                || board.getPreviousStep().type == StepType.PUSH) {
             return false;
         }
 
         numberOfSteps = 0;
-        moves.add(currentMove);
-        currentMove = new Move();
 
         if (gameType == GameType.HUMAN_COMPUTER) {
-            Color engineColor = Color.getOpposingColor(currentTurn);
-            Move engineMove = engine.generateMove(board.getCopy(), engineColor);
-            board.makeMove(engineMove);
-            moves.add(engineMove);
+            Color engineColor = Color.getOpposingColor(currentPlayer);
+            engine.makeMove(board, engineColor);
         } else {
-            currentTurn = Color.getOpposingColor(currentTurn);
+            currentPlayer = Color.getOpposingColor(currentPlayer);
         }
 
         return true;
@@ -75,7 +63,7 @@ public class Game {
 
         Set<Step> validSteps = board.getValidSteps(from);
         Step nextStep = validSteps.stream()
-                .filter(step -> board.getPieceAt(step.from).color == currentTurn)
+                .filter(step -> board.getPieceAt(step.from).color == currentPlayer)
                 .filter(step -> step.getDestination().equals(to))
                 .findFirst()
                 .orElse(null);
@@ -86,7 +74,7 @@ public class Game {
         }
 
         board.makeStep(nextStep);
-        currentMove.steps[numberOfSteps++] = nextStep;
+        ++numberOfSteps;
 
         return true;
     }
@@ -96,7 +84,7 @@ public class Game {
     }
 
     public GameResult getGameResult() {
-        Color previousPlayer = Color.getOpposingColor(currentTurn);
+        Color previousPlayer = Color.getOpposingColor(currentPlayer);
         GameResult result = board.getGameResult(previousPlayer);
         if (result != GameResult.NONE) {
             running = false;

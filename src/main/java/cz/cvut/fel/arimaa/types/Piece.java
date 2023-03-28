@@ -67,9 +67,7 @@ public abstract class Piece {
                 && from.isAdjacentTo(previousStep.from)) {
 
             Direction direction = Direction.getDirection(from, previousStep.from);
-            boolean removed = !board.isSafeAt(previousStep.from, color);
-            steps.add(new Step(this, from, direction, removed,
-                    StepType.SIMPLE));
+            steps.add(new Step(this, from, direction, false, StepType.SIMPLE));
 
             return;
         }
@@ -81,8 +79,7 @@ public abstract class Piece {
             }
 
             if (!board.isPieceAt(shifted)) {
-                boolean removed = !board.isSafeAt(shifted, color);
-                steps.add(new Step(this, from, direction, removed, StepType.SIMPLE));
+                steps.add(new Step(this, from, direction, false, StepType.SIMPLE));
             }
         }
     }
@@ -111,8 +108,7 @@ public abstract class Piece {
                     continue;
                 }
 
-                boolean removed = !board.isSafeAt(pushingPos, enemy.color);
-                steps.add(new Step(enemy, shifted, pushingDirection, removed, StepType.PUSH));
+                steps.add(new Step(enemy, shifted, pushingDirection, false, StepType.PUSH));
             }
         }
     }
@@ -144,12 +140,10 @@ public abstract class Piece {
                 continue;
             }
 
-            boolean removed = !board.isSafeAt(previousStep.from, enemy.color);
             Direction pullingDirection =
                     Direction.getOppositeDirection(direction);
 
-            steps.add(new Step(enemy, shifted, pullingDirection, removed,
-                    StepType.PULL));
+            steps.add(new Step(enemy, shifted, pullingDirection, false, StepType.PULL));
         }
     }
 

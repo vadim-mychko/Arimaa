@@ -1,54 +1,44 @@
 package cz.cvut.fel.arimaa.types;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Move {
 
-    public static final int MAX_STEPS = 4;
-    public final Step[] steps;
+    public static final int MAX_LEGAL_STEPS = 4;
+
+    private List<Step> steps;
 
     public Move() {
-        steps = new Step[MAX_STEPS];
+        steps = new ArrayList<>();
     }
 
-    public Move(Step first) {
+    public Move(List<Step> steps) {
         this();
-        steps[0] = first;
+        this.steps.addAll(steps);
     }
 
-    public Move(Step first, Step second) {
-        this(first);
-        steps[1] = second;
+    public Step getLastStep() {
+        return hasSteps() ? steps.get(steps.size() - 1) : null;
     }
 
-    public Move(Step first, Step second, Step third) {
-        this(first, second);
-        steps[2] = third;
+    public void addStep(Step step) {
+        if (step != null) {
+            steps.add(step);
+        }
     }
 
-    public Move(Step first, Step second, Step third, Step fourth) {
-        this(first, second, third);
-        steps[3] = fourth;
-    }
-
-    public Move(Step[] steps) {
-        this();
-        int length = Math.min(4, steps.length);
-        System.arraycopy(steps, 0, this.steps, 0, length);
+    public int getNumberOfSteps() {
+        return steps.size();
     }
 
     public boolean hasSteps() {
-        return steps[0] != null;
+        return !steps.isEmpty();
     }
 
-    public Step getLast() {
-        for (int i = MAX_STEPS - 1; i >= 0; --i) {
-            if (steps[i] != null) {
-                return steps[i];
-            }
-        }
-
-        return null;
+    public Step getStep(int index) {
+        return index >= 0 && index < steps.size() ? steps.get(index) : null;
     }
 
     @Override
@@ -56,27 +46,26 @@ public class Move {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Move move = (Move) o;
-        return Arrays.equals(steps, move.steps);
+        return steps.equals(move.steps);
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(steps);
+        return Objects.hash(steps);
     }
 
     @Override
     public String toString() {
-        if (steps[0] == null) {
+        if (steps.isEmpty()) {
             return "";
         }
 
-        StringBuilder str = new StringBuilder(steps[0].toString());
-        for (int i = 1; i < MAX_STEPS; ++i) {
-            if (steps[i] != null) {
-                str.append(" ").append(steps[i]);
-            }
+        int numberOfSteps = steps.size();
+        StringBuilder repr = new StringBuilder(steps.get(0).toString());
+        for (int i = 1; i < numberOfSteps; ++i) {
+            repr.append(" ").append(steps.get(i));
         }
 
-        return str.toString();
+        return repr.toString();
     }
 }

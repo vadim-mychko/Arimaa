@@ -15,16 +15,12 @@ class RandomStrategy implements Strategy {
     }
 
     @Override
-    public Move generateMove(Board board, Color color) {
-        int numberOfSteps = new Random().nextInt(Move.MAX_STEPS);
-        Move generatedMove = new Move();
+    public void makeMove(Board board, Color color) {
+        int numberOfSteps = new Random().nextInt(Move.MAX_LEGAL_STEPS - 1) + 1;
         for (int i = 0; i < numberOfSteps; ++i) {
             Set<Step> validSteps = board.getValidSteps(color);
             Step step = getRandomStep(validSteps);
-            generatedMove.steps[i] = step;
             board.makeStep(step);
         }
-
-        return generatedMove;
     }
 }

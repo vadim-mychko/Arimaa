@@ -29,7 +29,7 @@ public class BoardTest {
         board.load();
 
         Set<Step> steps = board.getValidSteps(getSquare("c2"));
-        Step expected = Step.fromString("Cc2nxs");
+        Step expected = Step.fromString("Cc2ns");
 
         assertEquals(Set.of(expected), steps);
     }

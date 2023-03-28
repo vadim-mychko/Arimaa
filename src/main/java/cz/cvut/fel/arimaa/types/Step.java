@@ -75,6 +75,10 @@ public class Step {
         return getRepr() + type.repr;
     }
 
+    public String getDescription() {
+        return "";
+    }
+
     public String getRepr() {
         return "" + piece.getRepr() + from
                 + (direction != null ? direction.repr : "")

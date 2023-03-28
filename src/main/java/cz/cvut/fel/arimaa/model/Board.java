@@ -2,10 +2,8 @@ package cz.cvut.fel.arimaa.model;
 
 import cz.cvut.fel.arimaa.types.*;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.logging.Logger;
 
 import static cz.cvut.fel.arimaa.types.Square.getSquare;
 
@@ -45,11 +43,16 @@ public class Board {
     private static final List<Square> TRAPS = List.of(getSquare("c3"),
             getSquare("f3"), getSquare("c6"), getSquare("f6"));
 
-    private final Piece[][] board;
-    private Step previousStep;
+    private static final Logger logger = Logger.getLogger(Board.class.getName());
+
+    private Piece[][] board;
+    private List<Move> moves;
+    private List<Step> steps;
 
     Board() {
         board = new Piece[WIDTH][HEIGHT];
+        moves = new ArrayList<>();
+        steps = new ArrayList<>();
     }
 
     public static boolean isTrap(Square pos) {
@@ -97,7 +100,8 @@ public class Board {
     }
 
     void reset() {
-        previousStep = null;
+        moves.clear();
+        steps.clear();
         for (int y = 0; y < HEIGHT; ++y) {
             for (int x = 0; x < WIDTH; ++x) {
                 board[x][y] = null;
@@ -161,14 +165,15 @@ public class Board {
     }
 
     boolean makeMove(Move move) {
-        if (move == null || move.steps[0] == null) {
+        if (move == null || !move.hasSteps()) {
             return false;
         }
 
+        int numberOfSteps = move.getNumberOfSteps();
         boolean made = true;
-        for (int i = 0; i < Move.MAX_STEPS; ++i) {
-            if (move.steps[i] == null
-                    || !(made = makeStep(move.steps[i]))) {
+        for (int i = 0; i < numberOfSteps; ++i) {
+            if (!makeStep(move.getStep(i))) {
+                made = false;
                 break;
             }
         }
@@ -201,7 +206,12 @@ public class Board {
             board[step.from.x][step.from.y] = null;
         }
 
-        previousStep = step;
+        steps.add(step);
+        if (!step.removed && !isSafeAt(step.getDestination(), step.piece.color)) {
+            makeStep(new Step(step.piece, step.getDestination(), null, true, StepType.SIMPLE));
+        }
+
+        logger.info("Made " + step.getDescription());
 
         return true;
     }
@@ -260,18 +270,24 @@ public class Board {
         return validSteps.contains(step);
     }
 
+    void finishMakingMove() {
+        if (steps.isEmpty()) {
+            return;
+        }
+
+        moves.add(new Move(steps));
+        steps.clear();
+    }
+
     public Step getPreviousStep() {
-        return previousStep;
+        return !steps.isEmpty() ? steps.get(steps.size() - 1) : null;
     }
 
     public Board getCopy() {
         Board copied = new Board();
-        copied.previousStep = previousStep;
-        for (int y = 0; y < HEIGHT; ++y) {
-            for (int x = 0; x < WIDTH; ++x) {
-                copied.board[x][y] = board[x][y];
-            }
-        }
+        copied.board = Arrays.copyOf(board, board.length);
+        copied.steps.addAll(steps);
+        copied.moves.addAll(moves);
 
         return copied;
     }

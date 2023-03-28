@@ -1,7 +1,6 @@
 package cz.cvut.fel.arimaa.model;
 
 import cz.cvut.fel.arimaa.types.Color;
-import cz.cvut.fel.arimaa.types.Move;
 
 class Engine {
 
@@ -15,7 +14,7 @@ class Engine {
         this.strategy = strategy;
     }
 
-    Move generateMove(Board board, Color color) {
-        return strategy.generateMove(board, color);
+    void makeMove(Board board, Color color) {
+        strategy.makeMove(board, color);
     }
 }
