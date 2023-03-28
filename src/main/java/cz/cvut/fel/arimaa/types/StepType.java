@@ -18,4 +18,9 @@ public enum StepType {
             default -> null;
         };
     }
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 }

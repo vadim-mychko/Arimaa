@@ -3,14 +3,18 @@ package cz.cvut.fel.arimaa.model;
 import cz.cvut.fel.arimaa.types.*;
 
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class Game {
+
+    private static final Logger logger = Logger.getLogger(Game.class.getName());
 
     private Board board;
     private Color currentPlayer;
     private int numberOfSteps;
     private Engine engine;
     private GameType gameType;
+    private Set<Step> recentSteps;
     private boolean running;
 
     public Game() {
@@ -20,6 +24,7 @@ public class Game {
         currentPlayer = Color.GOLD;
         engine = new Engine(new RandomStrategy());
         gameType = GameType.HUMAN_COMPUTER;
+        recentSteps = null;
         running = true;
     }
 
@@ -35,6 +40,7 @@ public class Game {
     public void reset() {
         board.load();
         numberOfSteps = 0;
+        recentSteps = null;
         running = true;
     }
 
@@ -45,6 +51,7 @@ public class Game {
         }
 
         numberOfSteps = 0;
+        recentSteps = null;
 
         if (gameType == GameType.HUMAN_COMPUTER) {
             Color engineColor = Color.getOpposingColor(currentPlayer);
@@ -61,10 +68,13 @@ public class Game {
             return false;
         }
 
-        Set<Step> validSteps = board.getValidSteps(from);
-        Step nextStep = validSteps.stream()
-                .filter(step -> board.getPieceAt(step.from).color == currentPlayer)
-                .filter(step -> step.getDestination().equals(to))
+        if (recentSteps == null) {
+            recentSteps = board.getValidSteps(currentPlayer);
+        }
+
+        Step nextStep = recentSteps.stream()
+                .filter(step -> step.from.equals(from)
+                        && step.getDestination().equals(to))
                 .findFirst()
                 .orElse(null);
 
@@ -75,6 +85,7 @@ public class Game {
 
         board.makeStep(nextStep);
         ++numberOfSteps;
+        recentSteps = null;
 
         return true;
     }
