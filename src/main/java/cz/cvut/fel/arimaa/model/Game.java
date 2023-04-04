@@ -72,9 +72,9 @@ public class Game {
             cachedSteps = board.getValidSteps(currentPlayer);
         }
 
-        // TODO: merge game & game controller
         Step nextStep = cachedSteps.stream()
-                .filter(step -> step.from.equals(from))
+                .filter(step -> step.from.equals(from)
+                        && step.getDestination().equals(to))
                 .findFirst()
                 .orElse(null);
 
@@ -83,6 +83,7 @@ public class Game {
             return false;
         }
 
+        cachedSteps = null;
         board.makeStep(nextStep);
         ++numberOfSteps;
 
