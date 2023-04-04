@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 
 class GameController {
 
-    private static final Logger logger = Logger.getLogger(
-            GameController.class.getName());
+    private static final Logger logger
+            = Logger.getLogger(GameController.class.getName());
 
     private Game game;
     private GameView view;
@@ -36,7 +36,7 @@ class GameController {
     }
 
     void onSquareClicked(Square square) {
-        if (previousSquare == null) {
+        if (previousSquare == null || previousSquare.equals(square)) {
             previousSquare = square;
             return;
         }

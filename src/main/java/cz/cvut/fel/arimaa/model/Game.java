@@ -14,8 +14,8 @@ public class Game {
     private int numberOfSteps;
     private Engine engine;
     private GameType gameType;
-    private Set<Step> recentSteps;
     private boolean running;
+    private Set<Step> cachedSteps;
 
     public Game() {
         board = new Board();
@@ -24,7 +24,6 @@ public class Game {
         currentPlayer = Color.GOLD;
         engine = new Engine(new RandomStrategy());
         gameType = GameType.HUMAN_COMPUTER;
-        recentSteps = null;
         running = true;
     }
 
@@ -40,8 +39,8 @@ public class Game {
     public void reset() {
         board.load();
         numberOfSteps = 0;
-        recentSteps = null;
         running = true;
+        cachedSteps = null;
     }
 
     public boolean finishMakingSteps() {
@@ -51,7 +50,8 @@ public class Game {
         }
 
         numberOfSteps = 0;
-        recentSteps = null;
+        cachedSteps = null;
+        board.finishMakingMove();
 
         if (gameType == GameType.HUMAN_COMPUTER) {
             Color engineColor = Color.getOpposingColor(currentPlayer);
@@ -68,13 +68,13 @@ public class Game {
             return false;
         }
 
-        if (recentSteps == null) {
-            recentSteps = board.getValidSteps(currentPlayer);
+        if (cachedSteps == null) {
+            cachedSteps = board.getValidSteps(currentPlayer);
         }
 
-        Step nextStep = recentSteps.stream()
-                .filter(step -> step.from.equals(from)
-                        && step.getDestination().equals(to))
+        // TODO: merge game & game controller
+        Step nextStep = cachedSteps.stream()
+                .filter(step -> step.from.equals(from))
                 .findFirst()
                 .orElse(null);
 
@@ -85,7 +85,6 @@ public class Game {
 
         board.makeStep(nextStep);
         ++numberOfSteps;
-        recentSteps = null;
 
         return true;
     }

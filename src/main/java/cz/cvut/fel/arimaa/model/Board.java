@@ -207,6 +207,7 @@ public class Board {
         }
 
         steps.add(step);
+        // TODO: fix removal
         if (!step.removed && !isSafeAt(step.getDestination(), step.piece.color)) {
             makeStep(new Step(step.piece, step.getDestination(), null, true, StepType.SIMPLE));
         }
