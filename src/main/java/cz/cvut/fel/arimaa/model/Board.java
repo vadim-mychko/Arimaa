@@ -297,7 +297,14 @@ public class Board {
     }
 
     public Step getPreviousStep() {
-        return !steps.isEmpty() ? steps.get(steps.size() - 1) : null;
+        for (int i = steps.size() - 1; i >= 0; --i) {
+            Step step = steps.get(i);
+            if (!step.removed) {
+                return step;
+            }
+        }
+
+        return null;
     }
 
     public Board getCopy() {

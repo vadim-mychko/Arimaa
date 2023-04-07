@@ -67,11 +67,15 @@ public class Game {
         Step nextStep = board.getValidSteps(currentPlayer).stream()
                 .filter(step -> step.from.equals(from)
                         && step.getDestination().equals(to))
+                .filter(step -> !(board.getPreviousStep() != null &&
+                        board.getPreviousStep().type == StepType.PUSH
+                        && !step.getDestination().equals(board.getPreviousStep().from)))
                 .findFirst()
                 .orElse(null);
-        
+
         if (nextStep == null || numberOfSteps >= 4
                 || (numberOfSteps == 3 && nextStep.type == StepType.PUSH)) {
+            System.out.println("here");
             return false;
         }
 
