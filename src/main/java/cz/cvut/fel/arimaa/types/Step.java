@@ -76,8 +76,8 @@ public class Step {
     }
 
     public String getDescription() {
-        return type + " step from " + from + " to " + getDestination()
-                + (direction == null ? " with creation" : "")
+        return type + " step from " + from
+                + (direction == null ? "" : " to " + getDestination())
                 + (removed ? " with removal" : "");
     }
 

@@ -2,7 +2,6 @@ package cz.cvut.fel.arimaa.model;
 
 import cz.cvut.fel.arimaa.types.*;
 
-import java.util.Set;
 import java.util.logging.Logger;
 
 public class Game {
@@ -15,7 +14,6 @@ public class Game {
     private Engine engine;
     private GameType gameType;
     private boolean running;
-    private Set<Step> cachedSteps;
 
     public Game() {
         board = new Board();
@@ -23,7 +21,7 @@ public class Game {
         numberOfSteps = 0;
         currentPlayer = Color.GOLD;
         engine = new Engine(new RandomStrategy());
-        gameType = GameType.HUMAN_COMPUTER;
+        gameType = GameType.HUMAN_HUMAN;
         running = true;
     }
 
@@ -40,7 +38,6 @@ public class Game {
         board.load();
         numberOfSteps = 0;
         running = true;
-        cachedSteps = null;
     }
 
     public boolean finishMakingSteps() {
@@ -50,7 +47,6 @@ public class Game {
         }
 
         numberOfSteps = 0;
-        cachedSteps = null;
         board.finishMakingMove();
 
         if (gameType == GameType.HUMAN_COMPUTER) {
@@ -68,22 +64,17 @@ public class Game {
             return false;
         }
 
-        if (cachedSteps == null) {
-            cachedSteps = board.getValidSteps(currentPlayer);
-        }
-
-        Step nextStep = cachedSteps.stream()
+        Step nextStep = board.getValidSteps(currentPlayer).stream()
                 .filter(step -> step.from.equals(from)
                         && step.getDestination().equals(to))
                 .findFirst()
                 .orElse(null);
-
+        
         if (nextStep == null || numberOfSteps >= 4
                 || (numberOfSteps == 3 && nextStep.type == StepType.PUSH)) {
             return false;
         }
 
-        cachedSteps = null;
         board.makeStep(nextStep);
         ++numberOfSteps;
 

@@ -191,6 +191,22 @@ public class Board {
         return true;
     }
 
+    private void makeRemovedSteps() {
+        for (Square trap : TRAPS) {
+            Piece piece = getPieceAt(trap);
+            if (piece == null) {
+                continue;
+            }
+
+            if (!isSafeAt(trap, piece.color)) {
+                Step step = new Step(piece, trap, null, true, StepType.SIMPLE);
+                steps.add(step);
+                board[trap.x][trap.y] = null;
+                logger.info("Made " + step.getDescription());
+            }
+        }
+    }
+
     boolean makeStep(Step step) {
         if (!isValidStep(step)) {
             return false;
@@ -206,13 +222,9 @@ public class Board {
             board[step.from.x][step.from.y] = null;
         }
 
-        steps.add(step);
-        // TODO: fix removal
-        if (!step.removed && !isSafeAt(step.getDestination(), step.piece.color)) {
-            makeStep(new Step(step.piece, step.getDestination(), null, true, StepType.SIMPLE));
-        }
-
         logger.info("Made " + step.getDescription());
+        steps.add(step);
+        makeRemovedSteps();
 
         return true;
     }
@@ -220,6 +232,10 @@ public class Board {
     boolean isValidStep(Step step) {
         if (step == null || step.piece == null || step.from == null) {
             return false;
+        }
+
+        if (step.type == StepType.SIMPLE && step.removed) {
+            return true;
         }
 
         return step.type == StepType.SIMPLE
