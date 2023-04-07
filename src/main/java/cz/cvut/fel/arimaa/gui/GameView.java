@@ -37,6 +37,10 @@ class GameView extends BorderPane {
         setTop(buttonPanel);
     }
 
+    private void addPGNView() {
+
+    }
+
     void update(Board board) {
         boardView.update(board);
     }

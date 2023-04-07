@@ -256,6 +256,12 @@ public class Board {
             }
         }
 
+        Step previousStep = getPreviousStep();
+        if (previousStep != null && previousStep.type == StepType.PUSH) {
+            validSteps.removeIf(step ->
+                    !step.getDestination().equals(previousStep.from));
+        }
+
         return validSteps;
     }
 

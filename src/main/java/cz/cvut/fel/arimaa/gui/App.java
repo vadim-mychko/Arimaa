@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 public class App extends Application {
 
     public static void main(String[] args) {
-        boolean logsEnabled = args.length > 0 && args[0].equals("log");
+        boolean logsEnabled = args.length > 0 && args[0].equals("--log");
         if (logsEnabled) {
             Logger.getLogger("").setLevel(Level.INFO);
             Logger.getLogger("").info("Logging on INFO level enabled");
