@@ -1,14 +1,39 @@
 package cz.cvut.fel.arimaa.model;
 
 import cz.cvut.fel.arimaa.types.Color;
+import cz.cvut.fel.arimaa.types.Move;
 import cz.cvut.fel.arimaa.types.Step;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
 
 public class PGNLoader {
+
+    private PGNLoader() {
+
+    }
+
+    public static boolean saveToFile(Game game, File file) {
+        List<Move> moves = game.getMoves();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            int numberOfTurn = 1;
+            Color player = Color.GOLD;
+            for (Move move : moves) {
+                String line = Integer.toString(numberOfTurn) + player.repr + " " + move;
+                writer.write(line);
+                writer.newLine();
+
+                player = Color.getOpposingColor(player);
+                if (player == Color.GOLD) {
+                    ++numberOfTurn;
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
+
+        return true;
+    }
 
     public static Game loadFromFile(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {

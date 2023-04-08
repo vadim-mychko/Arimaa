@@ -46,6 +46,16 @@ class GameController {
         }
     }
 
+    void onSavePGNChosen(File file) {
+        if (file == null) {
+            return;
+        }
+
+        if (PGNLoader.saveToFile(game, file)) {
+            logger.info("Saved the game to the given file");
+        }
+    }
+
     void onLoadPGNChosen(File file) {
         if (file == null) {
             return;
@@ -59,7 +69,7 @@ class GameController {
         this.game = loadedGame;
         view.setMoveListView(game.getMoves());
         view.update(game);
-        logger.info("Loaded a game from PGN");
+        logger.info("Loaded a game from the given file");
     }
 
     void onGameTypeSelected(GameType gameType) {

@@ -51,6 +51,7 @@ class GameView extends BorderPane {
         MenuItem humanVsHuman = new MenuItem("Human|Human");
         MenuItem humanVsComputer = new MenuItem("Human|Computer");
         Button loadPGN = new Button("Load PGN");
+        Button savePGN = new Button("Save PGN");
 
         newGame.setOnMouseClicked(e -> controller.onNewGameClicked());
         makeMove.setOnMouseClicked(e -> controller.onMakeMoveClicked());
@@ -64,11 +65,13 @@ class GameView extends BorderPane {
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         loadPGN.setOnMouseClicked(e ->
                 controller.onLoadPGNChosen(new FileChooser().showOpenDialog(dialogStage)));
+        savePGN.setOnMouseClicked(e ->
+                controller.onSavePGNChosen(new FileChooser().showSaveDialog(dialogStage)));
 
         MenuButton gameType = new MenuButton("Game Type", null,
                 humanVsHuman, humanVsComputer);
 
-        setTop(new HBox(newGame, makeMove, undoStep, gameType, loadPGN));
+        setTop(new HBox(newGame, makeMove, undoStep, gameType, loadPGN, savePGN));
     }
 
     void setMoveListView(ObservableList<Move> observableMoves) {
