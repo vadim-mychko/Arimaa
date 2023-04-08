@@ -3,11 +3,7 @@ package cz.cvut.fel.arimaa.model;
 import cz.cvut.fel.arimaa.types.*;
 import javafx.collections.ObservableList;
 
-import java.util.logging.Logger;
-
 public class Game {
-
-    private static final Logger logger = Logger.getLogger(Game.class.getName());
 
     private Board board;
     private Color currentPlayer;
@@ -28,6 +24,10 @@ public class Game {
 
     public void setGameType(GameType gameType) {
         this.gameType = gameType;
+    }
+
+    public int getNumberOfSteps() {
+        return numberOfSteps;
     }
 
     public void reset() {

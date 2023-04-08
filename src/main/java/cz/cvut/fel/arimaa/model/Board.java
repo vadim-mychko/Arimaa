@@ -364,21 +364,13 @@ public class Board {
 
         if (rabbitReachedGoal(player)) {
             return playerWins;
-        }
-
-        if (rabbitReachedGoal(opponent)) {
+        } else if (rabbitReachedGoal(opponent)) {
             return opponentWins;
-        }
-
-        if (lostAllRabbits(opponent)) {
+        } else if (lostAllRabbits(opponent)) {
             return playerWins;
-        }
-
-        if (lostAllRabbits(player)) {
+        } else if (lostAllRabbits(player)) {
             return opponentWins;
-        }
-
-        if (!hasPossibleSteps(opponent)) {
+        } else if (!hasPossibleSteps(opponent)) {
             return playerWins;
         }
 

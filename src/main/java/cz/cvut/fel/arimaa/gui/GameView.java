@@ -22,6 +22,7 @@ class GameView extends BorderPane {
     private GameController controller;
     private BoardView boardView;
     private Text currentPlayerView;
+    private Text numberOfStepsView;
     private Text gameResultView;
 
     GameView() {
@@ -29,6 +30,7 @@ class GameView extends BorderPane {
         this.controller = new GameController(this);
         this.boardView = new BoardView();
         this.currentPlayerView = new Text();
+        this.numberOfStepsView = new Text();
         this.gameResultView = new Text();
         setMinSize(800, 800);
         addBoardView();
@@ -67,11 +69,13 @@ class GameView extends BorderPane {
             }
         });
 
-        setCenter(new VBox(currentPlayerView, moveListView, gameResultView));
+        setCenter(new VBox(currentPlayerView, numberOfStepsView, gameResultView,
+                moveListView));
     }
 
     void update(Game game) {
         currentPlayerView.setText("Current player: " + game.getCurrentPlayer());
+        numberOfStepsView.setText("Number of steps: " + game.getNumberOfSteps());
         gameResultView.setText("Game result: " + game.getGameResult());
         boardView.update(game.getBoard());
     }
