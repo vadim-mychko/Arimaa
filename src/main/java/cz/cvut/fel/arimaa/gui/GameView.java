@@ -1,9 +1,13 @@
 package cz.cvut.fel.arimaa.gui;
 
 import cz.cvut.fel.arimaa.model.Board;
+import cz.cvut.fel.arimaa.types.Color;
+import cz.cvut.fel.arimaa.types.Move;
 import cz.cvut.fel.arimaa.types.Piece;
 import cz.cvut.fel.arimaa.types.Square;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -15,30 +19,51 @@ class GameView extends BorderPane {
 
     private GameController controller;
     private BoardView boardView;
+    private ListView<Move> moveListView;
 
     GameView() {
         super();
-        this.boardView = new BoardView();
         this.controller = new GameController(this);
+        this.boardView = new BoardView();
+        this.moveListView = new ListView<>();
         setMinSize(800, 800);
-        setLeft(boardView);
+        addBoardView();
         addButtons();
+        addPGNView();
     }
 
     private void addButtons() {
-        HBox buttonPanel = new HBox();
         Button newGame = new Button("New Game");
         Button makeMove = new Button("Make Move");
 
         newGame.setOnMouseClicked(e -> controller.onNewGameClicked());
         makeMove.setOnMouseClicked(e -> controller.onMakeMoveClicked());
 
-        buttonPanel.getChildren().addAll(newGame, makeMove);
-        setTop(buttonPanel);
+        setTop(new HBox(newGame, makeMove));
+    }
+
+    private void addBoardView() {
+        setLeft(boardView);
     }
 
     private void addPGNView() {
+        moveListView.setItems(controller.getMoves());
+        moveListView.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(Move item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    int index = getIndex();
+                    int turn = index / 2 + 1;
+                    Color color = index % 2 == 0 ? Color.GOLD : Color.SILVER;
+                    setText(turn + "" + color.repr + " " + item);
+                }
+            }
+        });
 
+        setCenter(new VBox(moveListView));
     }
 
     void update(Board board) {

@@ -19,16 +19,6 @@ public class Move {
         this.steps.addAll(steps);
     }
 
-    public Step getLastStep() {
-        return hasSteps() ? steps.get(steps.size() - 1) : null;
-    }
-
-    public void addStep(Step step) {
-        if (step != null) {
-            steps.add(step);
-        }
-    }
-
     public int getNumberOfSteps() {
         return steps.size();
     }
@@ -61,9 +51,9 @@ public class Move {
         }
 
         int numberOfSteps = steps.size();
-        StringBuilder repr = new StringBuilder(steps.get(0).toString());
+        StringBuilder repr = new StringBuilder(steps.get(0).getRepr());
         for (int i = 1; i < numberOfSteps; ++i) {
-            repr.append(" ").append(steps.get(i));
+            repr.append(" ").append(steps.get(i).getRepr());
         }
 
         return repr.toString();

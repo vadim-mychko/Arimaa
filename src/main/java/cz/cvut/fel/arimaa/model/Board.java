@@ -1,6 +1,8 @@
 package cz.cvut.fel.arimaa.model;
 
 import cz.cvut.fel.arimaa.types.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -46,12 +48,12 @@ public class Board {
     private static final Logger logger = Logger.getLogger(Board.class.getName());
 
     private Piece[][] board;
-    private List<Move> moves;
+    private ObservableList<Move> moves;
     private List<Step> steps;
 
     Board() {
         board = new Piece[WIDTH][HEIGHT];
-        moves = new ArrayList<>();
+        moves = FXCollections.observableArrayList();
         steps = new ArrayList<>();
     }
 
@@ -179,6 +181,10 @@ public class Board {
         }
 
         return made;
+    }
+
+    ObservableList<Move> getMoves() {
+        return moves;
     }
 
     boolean makeSteps(Step[] steps) {

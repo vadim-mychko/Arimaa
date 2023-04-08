@@ -1,7 +1,9 @@
 package cz.cvut.fel.arimaa.gui;
 
 import cz.cvut.fel.arimaa.model.Game;
+import cz.cvut.fel.arimaa.types.Move;
 import cz.cvut.fel.arimaa.types.Square;
+import javafx.collections.ObservableList;
 
 import java.util.logging.Logger;
 
@@ -18,6 +20,10 @@ class GameController {
         this.game = new Game();
         this.view = view;
         previousSquare = null;
+    }
+
+    ObservableList<Move> getMoves() {
+        return game.getMoves();
     }
 
     void onNewGameClicked() {

@@ -1,6 +1,7 @@
 package cz.cvut.fel.arimaa.model;
 
 import cz.cvut.fel.arimaa.types.*;
+import javafx.collections.ObservableList;
 
 import java.util.logging.Logger;
 
@@ -52,6 +53,7 @@ public class Game {
         if (gameType == GameType.HUMAN_COMPUTER) {
             Color engineColor = Color.getOpposingColor(currentPlayer);
             engine.makeMove(board, engineColor);
+            board.finishMakingMove();
         } else {
             currentPlayer = Color.getOpposingColor(currentPlayer);
         }
@@ -79,6 +81,10 @@ public class Game {
         ++numberOfSteps;
 
         return true;
+    }
+
+    public ObservableList<Move> getMoves() {
+        return board.getMoves();
     }
 
     public Board getBoard() {
