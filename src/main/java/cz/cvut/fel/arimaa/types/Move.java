@@ -19,6 +19,32 @@ public class Move {
         this.steps.addAll(steps);
     }
 
+    public void addStep(Step step) {
+        steps.add(step);
+    }
+
+    public boolean removeLastStep() {
+        if (steps.isEmpty()) {
+            return false;
+        }
+
+        steps.remove(steps.size() - 1);
+        return true;
+    }
+
+    public int getNumberOfNonRemovalSteps() {
+        return (int) steps.stream().filter(step -> !step.removed).count();
+    }
+
+    public boolean removeStep(int index) {
+        if (index >= 0 && index < steps.size()) {
+            steps.remove(index);
+            return true;
+        }
+
+        return false;
+    }
+
     public int getNumberOfSteps() {
         return steps.size();
     }

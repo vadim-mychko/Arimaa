@@ -22,12 +22,23 @@ public class Game {
         running = true;
     }
 
-    public void setGameType(GameType gameType) {
-        this.gameType = gameType;
-    }
-
     public int getNumberOfSteps() {
         return numberOfSteps;
+    }
+
+    public boolean undoStep() {
+        if (!board.undoStep()) {
+            return false;
+        }
+
+        if (numberOfSteps <= 0) {
+            numberOfSteps = board.getLastMove().getNumberOfNonRemovalSteps();
+            currentPlayer = Color.getOpposingColor(currentPlayer);
+        } else {
+            --numberOfSteps;
+        }
+
+        return true;
     }
 
     public void reset() {
@@ -54,6 +65,14 @@ public class Game {
         }
 
         return true;
+    }
+
+    public GameType getGameType() {
+        return gameType;
+    }
+
+    public void setGameType(GameType gameType) {
+        this.gameType = gameType;
     }
 
     public boolean makeStep(Square from, Square to) {

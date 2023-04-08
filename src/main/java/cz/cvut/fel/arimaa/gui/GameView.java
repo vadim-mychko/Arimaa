@@ -2,13 +2,8 @@ package cz.cvut.fel.arimaa.gui;
 
 import cz.cvut.fel.arimaa.model.Board;
 import cz.cvut.fel.arimaa.model.Game;
-import cz.cvut.fel.arimaa.types.Color;
-import cz.cvut.fel.arimaa.types.Move;
-import cz.cvut.fel.arimaa.types.Piece;
-import cz.cvut.fel.arimaa.types.Square;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import cz.cvut.fel.arimaa.types.*;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -21,6 +16,7 @@ class GameView extends BorderPane {
 
     private GameController controller;
     private BoardView boardView;
+    private Text gameTypeView;
     private Text currentPlayerView;
     private Text numberOfStepsView;
     private Text gameResultView;
@@ -29,6 +25,7 @@ class GameView extends BorderPane {
         super();
         this.controller = new GameController(this);
         this.boardView = new BoardView();
+        this.gameTypeView = new Text();
         this.currentPlayerView = new Text();
         this.numberOfStepsView = new Text();
         this.gameResultView = new Text();
@@ -41,11 +38,21 @@ class GameView extends BorderPane {
     private void addButtons() {
         Button newGame = new Button("New Game");
         Button makeMove = new Button("Make Move");
+        Button undoStep = new Button("Undo Step");
+        MenuItem humanVsHuman = new MenuItem("Human|Human");
+        MenuItem humanVsComputer = new MenuItem("Human|Computer");
 
         newGame.setOnMouseClicked(e -> controller.onNewGameClicked());
         makeMove.setOnMouseClicked(e -> controller.onMakeMoveClicked());
+        undoStep.setOnMouseClicked(e -> controller.onUndoStepClicked());
+        humanVsHuman.setOnAction(e ->
+                controller.onGameTypeSelected(GameType.HUMAN_HUMAN));
+        humanVsComputer.setOnAction(e ->
+                controller.onGameTypeSelected(GameType.HUMAN_COMPUTER));
 
-        setTop(new HBox(newGame, makeMove));
+        MenuButton gameType = new MenuButton("Game Type", null,
+                humanVsHuman, humanVsComputer);
+        setTop(new HBox(newGame, makeMove, undoStep, gameType));
     }
 
     private void addBoardView() {
@@ -69,11 +76,12 @@ class GameView extends BorderPane {
             }
         });
 
-        setCenter(new VBox(currentPlayerView, numberOfStepsView, gameResultView,
-                moveListView));
+        setCenter(new VBox(gameTypeView, currentPlayerView, numberOfStepsView,
+                gameResultView, moveListView));
     }
 
     void update(Game game) {
+        gameTypeView.setText("Game type: " + game.getGameType());
         currentPlayerView.setText("Current player: " + game.getCurrentPlayer());
         numberOfStepsView.setText("Number of steps: " + game.getNumberOfSteps());
         gameResultView.setText("Game result: " + game.getGameResult());

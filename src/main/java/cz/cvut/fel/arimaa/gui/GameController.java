@@ -1,6 +1,7 @@
 package cz.cvut.fel.arimaa.gui;
 
 import cz.cvut.fel.arimaa.model.Game;
+import cz.cvut.fel.arimaa.types.GameType;
 import cz.cvut.fel.arimaa.types.Move;
 import cz.cvut.fel.arimaa.types.Square;
 import javafx.collections.ObservableList;
@@ -32,13 +33,24 @@ class GameController {
         logger.info("New game started");
     }
 
-    void onMakeMoveClicked() {
-        if (!game.finishMakingSteps()) {
-            return;
+    void onUndoStepClicked() {
+        if (game.undoStep()) {
+            view.update(game);
+            logger.info("Previous step is undone");
         }
+    }
 
+    void onGameTypeSelected(GameType gameType) {
+        game.setGameType(gameType);
         view.update(game);
-        logger.info("Current player finished making steps");
+        logger.info("Selected game type: " + gameType);
+    }
+
+    void onMakeMoveClicked() {
+        if (game.finishMakingSteps()) {
+            view.update(game);
+            logger.info("Current player finished making steps");
+        }
     }
 
     void onSquareClicked(Square square) {

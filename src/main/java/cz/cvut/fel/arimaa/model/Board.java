@@ -49,12 +49,10 @@ public class Board {
 
     private Piece[][] board;
     private ObservableList<Move> moves;
-    private List<Step> steps;
 
     Board() {
         board = new Piece[WIDTH][HEIGHT];
         moves = FXCollections.observableArrayList();
-        steps = new ArrayList<>();
     }
 
     public static boolean isTrap(Square pos) {
@@ -63,6 +61,38 @@ public class Board {
 
     void load() {
         load(DEFAULT_BOARD);
+    }
+
+    boolean undoStep() {
+        Move lastMove = getLastMove();
+        if (moves.size() <= 1 && lastMove.getNumberOfSteps() <= 0) {
+            return false;
+        }
+
+        if (lastMove.getNumberOfSteps() <= 0) {
+            moves.remove(moves.size() - 1);
+            lastMove = getLastMove();
+        }
+
+        Step lastStep = lastMove.getStep(lastMove.getNumberOfSteps() - 1);
+        
+        if (lastStep.removed) {
+            Square from = lastStep.from;
+            board[from.x][from.y] = lastStep.piece;
+            lastMove.removeLastStep();
+            lastStep = lastMove.getStep(lastMove.getNumberOfSteps() - 1);
+        }
+
+        Square from = lastStep.from;
+        Square to = lastStep.getDestination();
+        Piece piece = board[to.x][to.y];
+        board[to.x][to.y] = null;
+        board[from.x][from.y] = piece;
+        lastMove.removeLastStep();
+
+        moves.set(moves.size() - 1, lastMove);
+
+        return true;
     }
 
     boolean load(String positions) {
@@ -103,7 +133,7 @@ public class Board {
 
     void reset() {
         moves.clear();
-        steps.clear();
+        moves.add(new Move());
         for (int y = 0; y < HEIGHT; ++y) {
             for (int x = 0; x < WIDTH; ++x) {
                 board[x][y] = null;
@@ -206,11 +236,17 @@ public class Board {
 
             if (!isSafeAt(trap, piece.color)) {
                 Step step = new Step(piece, trap, null, true, StepType.SIMPLE);
-                steps.add(step);
+                addStepToMoves(step);
                 board[trap.x][trap.y] = null;
                 logger.info("Made " + step.getDescription());
             }
         }
+    }
+
+    private void addStepToMoves(Step step) {
+        Move lastMove = getLastMove();
+        lastMove.addStep(step);
+        moves.set(moves.size() - 1, lastMove);
     }
 
     boolean makeStep(Step step) {
@@ -229,7 +265,7 @@ public class Board {
         }
 
         logger.info("Made " + step.getDescription());
-        steps.add(step);
+        addStepToMoves(step);
         makeRemovedSteps();
 
         return true;
@@ -300,17 +336,21 @@ public class Board {
     }
 
     void finishMakingMove() {
-        if (steps.isEmpty()) {
-            return;
-        }
+        moves.add(new Move());
+    }
 
-        moves.add(new Move(steps));
-        steps.clear();
+    Move getLastMove() {
+        return moves.isEmpty() ? null : moves.get(moves.size() - 1);
     }
 
     public Step getPreviousStep() {
-        for (int i = steps.size() - 1; i >= 0; --i) {
-            Step step = steps.get(i);
+        Move lastMove = getLastMove();
+        if (lastMove == null) {
+            return null;
+        }
+
+        for (int i = lastMove.getNumberOfSteps() - 1; i >= 0; --i) {
+            Step step = lastMove.getStep(i);
             if (!step.removed) {
                 return step;
             }
@@ -322,7 +362,6 @@ public class Board {
     public Board getCopy() {
         Board copied = new Board();
         copied.board = Arrays.copyOf(board, board.length);
-        copied.steps.addAll(steps);
         copied.moves.addAll(moves);
 
         return copied;
