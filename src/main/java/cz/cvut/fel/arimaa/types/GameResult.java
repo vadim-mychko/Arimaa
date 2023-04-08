@@ -14,4 +14,13 @@ public enum GameResult {
             case SILVER -> SILVER_WIN;
         };
     }
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case GOLD_WIN -> "Gold wins";
+            case SILVER_WIN -> "Silver wins";
+            case NONE -> "None";
+        };
+    }
 }

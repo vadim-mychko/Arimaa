@@ -9,7 +9,7 @@ class Rabbit extends Piece {
     private static final Direction[] goldDirections
             = new Direction[]{Direction.NORTH, Direction.EAST, Direction.WEST};
     private static final Direction[] silverDirections
-            = new Direction[]{Direction.NORTH, Direction.EAST, Direction.WEST};
+            = new Direction[]{Direction.SOUTH, Direction.EAST, Direction.WEST};
 
     private static final Rabbit goldRabbit = new Rabbit(Color.GOLD);
     private static final Rabbit silverRabbit = new Rabbit(Color.SILVER);

@@ -20,7 +20,7 @@ class RandomStrategy implements Strategy {
         int numberOfSteps = new Random().nextInt(Move.MAX_LEGAL_STEPS - 1) + 1;
         for (int i = 0; i < numberOfSteps; ++i) {
             Set<Step> validSteps = board.getValidSteps(color);
-            boolean isLastStep = i == numberOfSteps - 2;
+            boolean isLastStep = i == numberOfSteps - 1;
             if (isLastStep) {
                 validSteps.removeIf(step -> step.type == StepType.PUSH);
             }

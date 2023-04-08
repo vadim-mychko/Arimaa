@@ -332,7 +332,7 @@ public class Board {
         int goal = color == Color.GOLD ? 0 : HEIGHT - 1;
         char repr = color == Color.GOLD ? 'R' : 'r';
         for (int x = 0; x < WIDTH; ++x) {
-            if (board[x][goal].getRepr() == repr) {
+            if (board[x][goal] != null && board[x][goal].getRepr() == repr) {
                 return true;
             }
         }
@@ -344,7 +344,7 @@ public class Board {
         char repr = color == Color.GOLD ? 'R' : 'r';
         for (int y = 0; y < HEIGHT; ++y) {
             for (int x = 0; x < WIDTH; ++x) {
-                if (board[x][y].getRepr() == repr) {
+                if (board[x][y] != null && board[x][y].getRepr() == repr) {
                     return false;
                 }
             }

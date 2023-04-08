@@ -22,13 +22,8 @@ public class Game {
         numberOfSteps = 0;
         currentPlayer = Color.GOLD;
         engine = new Engine(new RandomStrategy());
-        gameType = GameType.HUMAN_COMPUTER;
+        gameType = GameType.HUMAN_HUMAN;
         running = true;
-    }
-
-    public Game(GameType gameType) {
-        this();
-        this.gameType = gameType;
     }
 
     public void setGameType(GameType gameType) {
@@ -83,6 +78,10 @@ public class Game {
         return true;
     }
 
+    public Color getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public ObservableList<Move> getMoves() {
         return board.getMoves();
     }
@@ -95,6 +94,8 @@ public class Game {
         Color previousPlayer = Color.getOpposingColor(currentPlayer);
         GameResult result = board.getGameResult(previousPlayer);
         if (result != GameResult.NONE) {
+            numberOfSteps = 0;
+            board.finishMakingMove();
             running = false;
         }
 

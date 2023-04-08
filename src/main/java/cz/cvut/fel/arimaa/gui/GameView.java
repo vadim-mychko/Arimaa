@@ -1,6 +1,7 @@
 package cz.cvut.fel.arimaa.gui;
 
 import cz.cvut.fel.arimaa.model.Board;
+import cz.cvut.fel.arimaa.model.Game;
 import cz.cvut.fel.arimaa.types.Color;
 import cz.cvut.fel.arimaa.types.Move;
 import cz.cvut.fel.arimaa.types.Piece;
@@ -11,6 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,13 +21,15 @@ class GameView extends BorderPane {
 
     private GameController controller;
     private BoardView boardView;
-    private ListView<Move> moveListView;
+    private Text currentPlayerView;
+    private Text gameResultView;
 
     GameView() {
         super();
         this.controller = new GameController(this);
         this.boardView = new BoardView();
-        this.moveListView = new ListView<>();
+        this.currentPlayerView = new Text();
+        this.gameResultView = new Text();
         setMinSize(800, 800);
         addBoardView();
         addButtons();
@@ -47,7 +51,7 @@ class GameView extends BorderPane {
     }
 
     private void addPGNView() {
-        moveListView.setItems(controller.getMoves());
+        ListView<Move> moveListView = new ListView<>(controller.getMoves());
         moveListView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Move item, boolean empty) {
@@ -63,11 +67,13 @@ class GameView extends BorderPane {
             }
         });
 
-        setCenter(new VBox(moveListView));
+        setCenter(new VBox(currentPlayerView, moveListView, gameResultView));
     }
 
-    void update(Board board) {
-        boardView.update(board);
+    void update(Game game) {
+        currentPlayerView.setText("Current player: " + game.getCurrentPlayer());
+        gameResultView.setText("Game result: " + game.getGameResult());
+        boardView.update(game.getBoard());
     }
 
     private class BoardView extends GridPane {

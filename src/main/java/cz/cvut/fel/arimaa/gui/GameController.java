@@ -28,7 +28,7 @@ class GameController {
 
     void onNewGameClicked() {
         game.reset();
-        view.update(game.getBoard());
+        view.update(game);
         logger.info("New game started");
     }
 
@@ -37,7 +37,7 @@ class GameController {
             return;
         }
 
-        view.update(game.getBoard());
+        view.update(game);
         logger.info("Current player finished making steps");
     }
 
@@ -48,7 +48,7 @@ class GameController {
         }
 
         if (game.makeStep(previousSquare, square)) {
-            view.update(game.getBoard());
+            view.update(game);
         }
 
         previousSquare = null;
