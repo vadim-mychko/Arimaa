@@ -6,6 +6,7 @@ import cz.cvut.fel.arimaa.types.Move;
 import cz.cvut.fel.arimaa.types.Square;
 import javafx.collections.ObservableList;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 class GameController {
@@ -27,6 +28,10 @@ class GameController {
         return game.getMoves();
     }
 
+    Game getGame() {
+        return game;
+    }
+
     void onNewGameClicked() {
         game.reset();
         view.update(game);
@@ -38,6 +43,14 @@ class GameController {
             view.update(game);
             logger.info("Previous step is undone");
         }
+    }
+
+    void onLoadPGNChosen(File file) {
+        if (file == null) {
+            return;
+        }
+
+        logger.info("Loaded a game from PGN");
     }
 
     void onGameTypeSelected(GameType gameType) {

@@ -8,6 +8,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +36,7 @@ class GameView extends BorderPane {
         addBoardView();
         addButtons();
         addPGNView();
+        update(controller.getGame());
     }
 
     private void addButtons() {
@@ -41,6 +45,7 @@ class GameView extends BorderPane {
         Button undoStep = new Button("Undo Step");
         MenuItem humanVsHuman = new MenuItem("Human|Human");
         MenuItem humanVsComputer = new MenuItem("Human|Computer");
+        Button loadPGN = new Button("Load PGN");
 
         newGame.setOnMouseClicked(e -> controller.onNewGameClicked());
         makeMove.setOnMouseClicked(e -> controller.onMakeMoveClicked());
@@ -50,9 +55,15 @@ class GameView extends BorderPane {
         humanVsComputer.setOnAction(e ->
                 controller.onGameTypeSelected(GameType.HUMAN_COMPUTER));
 
+        Stage dialogStage = new Stage();
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        loadPGN.setOnMouseClicked(e ->
+                controller.onLoadPGNChosen(new FileChooser().showOpenDialog(dialogStage)));
+
         MenuButton gameType = new MenuButton("Game Type", null,
                 humanVsHuman, humanVsComputer);
-        setTop(new HBox(newGame, makeMove, undoStep, gameType));
+
+        setTop(new HBox(newGame, makeMove, undoStep, gameType, loadPGN));
     }
 
     private void addBoardView() {

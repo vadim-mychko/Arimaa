@@ -10,15 +10,17 @@ public class Game {
     private int numberOfSteps;
     private Engine engine;
     private GameType gameType;
+    private boolean isInitialPhase;
     private boolean running;
 
     public Game() {
         board = new Board();
-        board.load(Board.EMPTY_BOARD);
+        board.load();
         numberOfSteps = 0;
         currentPlayer = Color.GOLD;
         engine = new Engine(new RandomStrategy());
         gameType = GameType.HUMAN_HUMAN;
+        isInitialPhase = true;
         running = true;
     }
 
@@ -44,6 +46,7 @@ public class Game {
     public void reset() {
         board.load();
         numberOfSteps = 0;
+        isInitialPhase = true;
         running = true;
     }
 
@@ -78,6 +81,10 @@ public class Game {
     public boolean makeStep(Square from, Square to) {
         if (!running) {
             return false;
+        }
+
+        if (isInitialPhase) {
+
         }
 
         Step nextStep = board.getValidSteps(currentPlayer).stream()

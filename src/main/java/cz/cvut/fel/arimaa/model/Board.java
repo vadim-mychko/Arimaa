@@ -65,7 +65,7 @@ public class Board {
 
     boolean undoStep() {
         Move lastMove = getLastMove();
-        if (moves.size() <= 1 && lastMove.getNumberOfSteps() <= 0) {
+        if (moves.size() <= 3 && lastMove.getNumberOfSteps() <= 0) {
             return false;
         }
 
@@ -75,7 +75,7 @@ public class Board {
         }
 
         Step lastStep = lastMove.getStep(lastMove.getNumberOfSteps() - 1);
-        
+
         if (lastStep.removed) {
             Square from = lastStep.from;
             board[from.x][from.y] = lastStep.piece;
@@ -128,12 +128,36 @@ public class Board {
             }
         }
 
+        addInitialPhaseSteps();
+
         return true;
+    }
+
+    private void addInitialPhaseSteps() {
+        Move goldArrangement = new Move();
+        Move silverArrangement = new Move();
+
+        for (int y = HEIGHT - 1; y >= 0; --y) {
+            for (int x = 0; x < WIDTH; ++x) {
+                Square square = Square.getSquare(x, y);
+                Piece piece = getPieceAt(square);
+                if (piece == null) {
+                    continue;
+                }
+
+                Move arrangement = piece.color == Color.GOLD
+                        ? goldArrangement : silverArrangement;
+                arrangement.addStep(new Step(piece, square, null, false, StepType.SIMPLE));
+            }
+        }
+
+        moves.add(goldArrangement);
+        moves.add(silverArrangement);
+        moves.add(new Move());
     }
 
     void reset() {
         moves.clear();
-        moves.add(new Move());
         for (int y = 0; y < HEIGHT; ++y) {
             for (int x = 0; x < WIDTH; ++x) {
                 board[x][y] = null;
