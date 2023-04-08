@@ -1,6 +1,7 @@
 package cz.cvut.fel.arimaa.gui;
 
 import cz.cvut.fel.arimaa.model.Game;
+import cz.cvut.fel.arimaa.model.PGNLoader;
 import cz.cvut.fel.arimaa.types.GameType;
 import cz.cvut.fel.arimaa.types.Move;
 import cz.cvut.fel.arimaa.types.Square;
@@ -50,6 +51,14 @@ class GameController {
             return;
         }
 
+        Game loadedGame = PGNLoader.loadFromFile(file);
+        if (loadedGame == null) {
+            return;
+        }
+
+        this.game = loadedGame;
+        view.setMoveListView(game.getMoves());
+        view.update(game);
         logger.info("Loaded a game from PGN");
     }
 

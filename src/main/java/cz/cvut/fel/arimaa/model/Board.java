@@ -128,12 +128,12 @@ public class Board {
             }
         }
 
-        addInitialPhaseSteps();
+        setInitialPhaseSteps();
 
         return true;
     }
 
-    private void addInitialPhaseSteps() {
+    private void setInitialPhaseSteps() {
         Move goldArrangement = new Move();
         Move silverArrangement = new Move();
 
@@ -151,13 +151,13 @@ public class Board {
             }
         }
 
-        moves.add(goldArrangement);
-        moves.add(silverArrangement);
-        moves.add(new Move());
+        moves.set(0, goldArrangement);
+        moves.set(1, silverArrangement);
     }
 
     void reset() {
         moves.clear();
+        moves.addAll(new Move(), new Move(), new Move());
         for (int y = 0; y < HEIGHT; ++y) {
             for (int x = 0; x < WIDTH; ++x) {
                 board[x][y] = null;
@@ -186,12 +186,32 @@ public class Board {
         return safe;
     }
 
+    public int getNumberOfMoves() {
+        return moves.size();
+    }
+
     public Piece getPieceAt(Square pos) {
         return pos != null ? board[pos.x][pos.y] : null;
     }
 
     public boolean isPieceAt(Square pos) {
         return pos != null && board[pos.x][pos.y] != null;
+    }
+
+    boolean swapPieces(Square from, Square to, Color color) {
+        Piece left = getPieceAt(from);
+        Piece right = getPieceAt(to);
+        if (left == null || right == null
+                || left.color != color || right.color != color) {
+            return false;
+        }
+
+        board[from.x][from.y] = right;
+        board[to.x][to.y] = left;
+
+        setInitialPhaseSteps();
+
+        return true;
     }
 
     public boolean isFrozenAt(Square pos) {
@@ -295,6 +315,15 @@ public class Board {
         return true;
     }
 
+    void addPieceAt(Piece piece, Square pos) {
+        board[pos.x][pos.y] = piece;
+        Step step = new Step(piece, pos, null, false, StepType.SIMPLE);
+        int index = piece.color == Color.GOLD ? 0 : 1;
+        Move setupMove = moves.get(index);
+        setupMove.addStep(step);
+        moves.set(index, setupMove);
+    }
+
     boolean isValidStep(Step step) {
         if (step == null || step.piece == null || step.from == null) {
             return false;
@@ -309,7 +338,8 @@ public class Board {
     }
 
     private boolean isValidSimpleStep(Step step) {
-        return getValidSteps(step.from).contains(step);
+        return step.direction == null && !step.removed
+                || getValidSteps(step.from).contains(step);
     }
 
     public Set<Step> getValidSteps(Color color) {
@@ -369,10 +399,6 @@ public class Board {
 
     public Step getPreviousStep() {
         Move lastMove = getLastMove();
-        if (lastMove == null) {
-            return null;
-        }
-
         for (int i = lastMove.getNumberOfSteps() - 1; i >= 0; --i) {
             Step step = lastMove.getStep(i);
             if (!step.removed) {

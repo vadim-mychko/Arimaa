@@ -103,11 +103,11 @@ public abstract class Piece {
             }
 
             for (Direction pushingDirection : directions) {
-                Square pushingPos = direction.shift(shifted);
+                Square pushingPos = pushingDirection.shift(shifted);
                 if (pushingPos == null || board.isPieceAt(pushingPos)) {
                     continue;
                 }
-
+                
                 steps.add(new Step(enemy, shifted, pushingDirection, false, StepType.PUSH));
             }
         }

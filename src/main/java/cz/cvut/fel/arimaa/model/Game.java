@@ -24,6 +24,17 @@ public class Game {
         running = true;
     }
 
+    public Game(Board board) {
+        this.board = board;
+        numberOfSteps = board.getLastMove().getNumberOfNonRemovalSteps();
+        currentPlayer = board.getNumberOfMoves() % 2 == 0
+                ? Color.SILVER : Color.GOLD;
+        engine = new Engine(new RandomStrategy());
+        gameType = GameType.HUMAN_HUMAN;
+        isInitialPhase = board.getNumberOfMoves() <= 2;
+        running = true;
+    }
+
     public int getNumberOfSteps() {
         return numberOfSteps;
     }
@@ -51,6 +62,19 @@ public class Game {
     }
 
     public boolean finishMakingSteps() {
+        if (isInitialPhase) {
+            if (gameType == GameType.HUMAN_COMPUTER
+                    || currentPlayer == Color.SILVER) {
+                isInitialPhase = false;
+            }
+
+            currentPlayer = gameType == GameType.HUMAN_HUMAN
+                    ? Color.getOpposingColor(currentPlayer)
+                    : currentPlayer;
+
+            return true;
+        }
+
         if (!running || numberOfSteps <= 0
                 || board.getPreviousStep().type == StepType.PUSH) {
             return false;
@@ -59,7 +83,7 @@ public class Game {
         numberOfSteps = 0;
         board.finishMakingMove();
 
-        if (gameType == GameType.HUMAN_COMPUTER) {
+        if (!isInitialPhase && gameType == GameType.HUMAN_COMPUTER) {
             Color engineColor = Color.getOpposingColor(currentPlayer);
             engine.makeMove(board, engineColor);
             board.finishMakingMove();
@@ -78,13 +102,18 @@ public class Game {
         this.gameType = gameType;
     }
 
+    public boolean isInitialPhase() {
+        return isInitialPhase;
+    }
+
     public boolean makeStep(Square from, Square to) {
         if (!running) {
             return false;
         }
 
         if (isInitialPhase) {
-
+            board.swapPieces(from, to, currentPlayer);
+            return true;
         }
 
         Step nextStep = board.getValidSteps(currentPlayer).stream()

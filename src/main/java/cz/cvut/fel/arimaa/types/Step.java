@@ -6,6 +6,9 @@ import java.util.regex.Pattern;
 
 public class Step {
 
+    private static final Pattern STRING_PATTERN
+            = Pattern.compile("([rcdhmeRCDHME])([a-h][1-8])([nsew]?)(x?)([shl]?)");
+
     public final Piece piece;
     public final Square from;
     public final Direction direction;
@@ -30,11 +33,9 @@ public class Step {
 
         return steps;
     }
-
+    
     public static Step fromString(String str) {
-        Pattern pattern = Pattern.compile(
-                "([rcdhmeRCDHME])([a-h][1-8])([nsew]?)(x?)([shl])");
-        Matcher matcher = pattern.matcher(str);
+        Matcher matcher = STRING_PATTERN.matcher(str);
         if (!matcher.find()) {
             return null;
         }
@@ -44,7 +45,8 @@ public class Step {
         Direction direction = matcher.group(3).equals("")
                 ? null : Direction.fromRepr(matcher.group(3).charAt(0));
         boolean removed = matcher.group(4).equals("x");
-        StepType type = StepType.fromRepr(matcher.group(5).charAt(0));
+        StepType type = matcher.group(5).equals("")
+                ? StepType.SIMPLE : StepType.fromRepr(matcher.group(5).charAt(0));
 
         return new Step(piece, from, direction, removed, type);
     }

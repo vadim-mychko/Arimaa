@@ -3,6 +3,7 @@ package cz.cvut.fel.arimaa.gui;
 import cz.cvut.fel.arimaa.model.Board;
 import cz.cvut.fel.arimaa.model.Game;
 import cz.cvut.fel.arimaa.types.*;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,10 +18,12 @@ import java.util.Map;
 
 class GameView extends BorderPane {
 
+    ListView<Move> moveListView;
     private GameController controller;
     private BoardView boardView;
     private Text gameTypeView;
     private Text currentPlayerView;
+    private Text initialPhaseView;
     private Text numberOfStepsView;
     private Text gameResultView;
 
@@ -28,11 +31,13 @@ class GameView extends BorderPane {
         super();
         this.controller = new GameController(this);
         this.boardView = new BoardView();
+        this.moveListView = new ListView<>(controller.getMoves());
         this.gameTypeView = new Text();
         this.currentPlayerView = new Text();
+        this.initialPhaseView = new Text();
         this.numberOfStepsView = new Text();
         this.gameResultView = new Text();
-        setMinSize(800, 800);
+        setMinSize(1200, 800);
         addBoardView();
         addButtons();
         addPGNView();
@@ -66,12 +71,15 @@ class GameView extends BorderPane {
         setTop(new HBox(newGame, makeMove, undoStep, gameType, loadPGN));
     }
 
+    void setMoveListView(ObservableList<Move> observableMoves) {
+        moveListView.setItems(observableMoves);
+    }
+
     private void addBoardView() {
         setLeft(boardView);
     }
 
     private void addPGNView() {
-        ListView<Move> moveListView = new ListView<>(controller.getMoves());
         moveListView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Move item, boolean empty) {
@@ -87,13 +95,14 @@ class GameView extends BorderPane {
             }
         });
 
-        setCenter(new VBox(gameTypeView, currentPlayerView, numberOfStepsView,
-                gameResultView, moveListView));
+        setCenter(new VBox(gameTypeView, currentPlayerView, initialPhaseView,
+                numberOfStepsView, gameResultView, moveListView));
     }
 
     void update(Game game) {
         gameTypeView.setText("Game type: " + game.getGameType());
         currentPlayerView.setText("Current player: " + game.getCurrentPlayer());
+        initialPhaseView.setText("Initial phase: " + game.isInitialPhase());
         numberOfStepsView.setText("Number of steps: " + game.getNumberOfSteps());
         gameResultView.setText("Game result: " + game.getGameResult());
         boardView.update(game.getBoard());
