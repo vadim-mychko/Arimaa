@@ -87,6 +87,7 @@ class GameView extends BorderPane {
     }
 
     private void addPGNView() {
+        moveListView.setFocusTraversable(false);
         moveListView.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Move item, boolean empty) {
@@ -98,6 +99,7 @@ class GameView extends BorderPane {
                     int turn = index / 2 + 1;
                     Color color = index % 2 == 0 ? Color.GOLD : Color.SILVER;
                     setText(turn + "" + color.repr + " " + item);
+                    setDisable(true);
                 }
             }
         });
