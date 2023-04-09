@@ -21,7 +21,7 @@ import java.util.Map;
  */
 class GameView extends BorderPane {
 
-    ListView<Move> moveListView;
+    private ListView<Move> moveListView;
     private GameController controller;
     private BoardView boardView;
     private Text gameTypeView;
