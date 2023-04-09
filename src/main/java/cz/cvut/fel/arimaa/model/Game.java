@@ -3,6 +3,11 @@ package cz.cvut.fel.arimaa.model;
 import cz.cvut.fel.arimaa.types.*;
 import javafx.collections.ObservableList;
 
+/**
+ * Class for playing the Arimaa game (with all rules, change of turn, clock,
+ * different game types, etc.).
+ * Probably should have been merged with Board class...
+ */
 public class Game {
 
     private Board board;
@@ -14,6 +19,9 @@ public class Game {
     private boolean isInitialPhase;
     private boolean running;
 
+    /**
+     * Constructs an instance of Game with default board.
+     */
     public Game() {
         board = new Board();
         board.load();
@@ -26,6 +34,11 @@ public class Game {
         running = true;
     }
 
+    /**
+     * Constructs an instance of Game with the given board.
+     *
+     * @param board Board state for constructing Game instance.
+     */
     public Game(Board board) {
         this.board = board;
         numberOfSteps = board.getLastMove().getNumberOfNonRemovalSteps();
@@ -38,10 +51,20 @@ public class Game {
         running = true;
     }
 
+    /**
+     * Get number of steps current player has made so far.
+     *
+     * @return number of steps current player has made so far.
+     */
     public int getNumberOfSteps() {
         return numberOfSteps;
     }
 
+    /**
+     * Undoes previously made step.
+     *
+     * @return true if the previous step is undone, false otherwise
+     */
     public boolean undoStep() {
         if (!board.undoStep()) {
             return false;
@@ -58,6 +81,9 @@ public class Game {
         return true;
     }
 
+    /**
+     * Reset the game, load the default board.
+     */
     public void reset() {
         board.load();
         numberOfSteps = 0;
@@ -67,10 +93,24 @@ public class Game {
         running = true;
     }
 
+    /**
+     * Get number of seconds player of the given color has spent on making
+     * steps.
+     *
+     * @param color Color of the player for getting elapsed time.
+     * @return number of seconds player of the given color has spent on making
+     * steps
+     */
     public int getTimeElapsed(Color color) {
         return clock.getTimeElapsed(color);
     }
 
+    /**
+     * Finish making steps for the current player. Next player is ought to make
+     * steps.
+     *
+     * @return true if current's player turn is finished, false otherwise
+     */
     public boolean finishMakingSteps() {
         if (isInitialPhase) {
             if (gameType == GameType.HUMAN_COMPUTER
@@ -107,18 +147,40 @@ public class Game {
         return true;
     }
 
+    /**
+     * Get game type.
+     *
+     * @return game type
+     */
     public GameType getGameType() {
         return gameType;
     }
 
+    /**
+     * Set game type to the given one.
+     *
+     * @param gameType Game type to be set.
+     */
     public void setGameType(GameType gameType) {
         this.gameType = gameType;
     }
 
+    /**
+     * Check if player has to arrange pieces.
+     *
+     * @return true if player has to arrange pieces, false otherwise
+     */
     public boolean isInitialPhase() {
         return isInitialPhase;
     }
 
+    /**
+     * Make step from the given source to the given destination.
+     *
+     * @param from Source of the step.
+     * @param to   Destination of the step.
+     * @return true if step is made, false otherwise
+     */
     public boolean makeStep(Square from, Square to) {
         if (!running) {
             return false;
@@ -146,18 +208,40 @@ public class Game {
         return true;
     }
 
+    /**
+     * Get color of the current's player.
+     *
+     * @return color of the current's player
+     */
     public Color getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Get observable list of made moves.
+     *
+     * @return observable list of made moves
+     */
     public ObservableList<Move> getMoves() {
         return board.getMoves();
     }
 
+    /**
+     * Get the underlying board.
+     *
+     * @return the underlying board
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * Get game result based on the current board's state and color of the
+     * previous player.
+     *
+     * @return game result based on the current board's state and color of the
+     * previous player
+     */
     public GameResult getGameResult() {
         Color previousPlayer = Color.getOpposingColor(currentPlayer);
         GameResult result = board.getGameResult(previousPlayer);

@@ -41,7 +41,9 @@ public class BoardTest {
         String[] stepStrs = {"Ed2ns", "Ed3ws", "Ec3ns", "Ec4ns", "Ec5ws",
                 "Eb5ns", "Eb6ss", "hb7sl", "hb6eh", "Eb5ns"};
         Step[] steps = Step.fromStrings(stepStrs);
-        board.makeSteps(steps);
+        for (Step step : steps) {
+            board.makeStep(step);
+        }
 
         String expected
                 = """

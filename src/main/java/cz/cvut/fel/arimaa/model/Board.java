@@ -4,16 +4,33 @@ import cz.cvut.fel.arimaa.types.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static cz.cvut.fel.arimaa.types.Square.getSquare;
 
+/**
+ * Class for representing board holding arimaa pieces & manipulating them.
+ * Probably should have been merged with Game class...
+ */
 public class Board {
 
+    /**
+     * Width of the board.
+     */
     public static final int WIDTH = 8;
+
+    /**
+     * Height of the board.
+     */
     public static final int HEIGHT = 8;
 
+    /**
+     * Textual representation of the empty board.
+     */
     static final String EMPTY_BOARD
             = """
              +-----------------+
@@ -28,6 +45,9 @@ public class Board {
              +-----------------+
                a b c d e f g h""";
 
+    /**
+     * Textual representation of the default board.
+     */
     static final String DEFAULT_BOARD
             = """
              +-----------------+
@@ -50,19 +70,37 @@ public class Board {
     private Piece[][] board;
     private ObservableList<Move> moves;
 
+    /**
+     * Constructs an instance of Board class.
+     * For working properly, load() has to be called too.
+     */
     Board() {
         board = new Piece[WIDTH][HEIGHT];
         moves = FXCollections.observableArrayList();
     }
 
+    /**
+     * Check if the given position on a board is trap.
+     *
+     * @param pos Position on the board.
+     * @return true if the given position on a board is trap, false otherwise
+     */
     public static boolean isTrap(Square pos) {
         return TRAPS.contains(pos);
     }
 
+    /**
+     * Sets pieces based on default board textual representation.
+     */
     void load() {
         load(DEFAULT_BOARD);
     }
 
+    /**
+     * Undoes the previous step if possible.
+     *
+     * @return true if the previous step is undone, false otherwise
+     */
     boolean undoStep() {
         Move lastMove = getLastMove();
         if (moves.size() <= 3 && lastMove.getNumberOfSteps() <= 0) {
@@ -95,6 +133,12 @@ public class Board {
         return true;
     }
 
+    /**
+     * Sets pieces based on the given textual representation.
+     *
+     * @param positions Textual representation of the board to be loaded.
+     * @return true if is loaded, false otherwise
+     */
     boolean load(String positions) {
         reset();
         String[] lines = positions.split("\n");
@@ -155,6 +199,9 @@ public class Board {
         moves.set(1, silverArrangement);
     }
 
+    /**
+     * Removes all pieces from the board and resets its move list.
+     */
     void reset() {
         moves.clear();
         moves.addAll(new Move(), new Move(), new Move());
@@ -165,6 +212,15 @@ public class Board {
         }
     }
 
+    /**
+     * Check if piece of the given color would be safe on the given position on
+     * the board.
+     *
+     * @param pos   Position on the board to checked.
+     * @param color Color of the piece to be checked.
+     * @return true if piece of the given color would be safe on the given
+     * position on the board, false otherwise
+     */
     public boolean isSafeAt(Square pos, Color color) {
         if (!isTrap(pos)) {
             return true;
@@ -186,18 +242,45 @@ public class Board {
         return safe;
     }
 
+    /**
+     * Get number of recorded moves.
+     *
+     * @return number of recorded moves
+     */
     public int getNumberOfMoves() {
         return moves.size();
     }
 
+    /**
+     * Get an instance of the piece on the given position on the board.
+     *
+     * @param pos Position of the piece on the board.
+     * @return an instance of the piece on the given position on the board if
+     * there is a piece at the given position, null otherwise
+     */
     public Piece getPieceAt(Square pos) {
         return pos != null ? board[pos.x][pos.y] : null;
     }
 
+    /**
+     * Check if there is any piece at the given position on the board.
+     *
+     * @param pos Position to be checked.
+     * @return true if there is any piece at the given position on the board,
+     * false otherwise
+     */
     public boolean isPieceAt(Square pos) {
         return pos != null && board[pos.x][pos.y] != null;
     }
 
+    /**
+     * Swap pieces of the same given color on the given positions on the board.
+     *
+     * @param from  Position of a piece to be swapped.
+     * @param to    Position of a piece to be swapped.
+     * @param color Color of each piece to be swapped.
+     * @return true if pieces are swapped, false otherwise
+     */
     boolean swapPieces(Square from, Square to, Color color) {
         Piece left = getPieceAt(from);
         Piece right = getPieceAt(to);
@@ -214,6 +297,13 @@ public class Board {
         return true;
     }
 
+    /**
+     * Check if the piece at the given position on the board is frozen.
+     *
+     * @param pos Position of the piece to be checked.
+     * @return true if the piece at the given position on the board is frozen,
+     * false otherwise
+     */
     public boolean isFrozenAt(Square pos) {
         if (!isPieceAt(pos)) {
             return false;
@@ -240,35 +330,13 @@ public class Board {
         return frozen;
     }
 
-    boolean makeMove(Move move) {
-        if (move == null || !move.hasSteps()) {
-            return false;
-        }
-
-        int numberOfSteps = move.getNumberOfSteps();
-        boolean made = true;
-        for (int i = 0; i < numberOfSteps; ++i) {
-            if (!makeStep(move.getStep(i))) {
-                made = false;
-                break;
-            }
-        }
-
-        return made;
-    }
-
+    /**
+     * Get observable list of made moves.
+     *
+     * @return observable list of made moves
+     */
     ObservableList<Move> getMoves() {
         return moves;
-    }
-
-    boolean makeSteps(Step[] steps) {
-        for (Step step : steps) {
-            if (!makeStep(step)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private void makeRemovedSteps() {
@@ -293,6 +361,12 @@ public class Board {
         moves.set(moves.size() - 1, lastMove);
     }
 
+    /**
+     * Make the given step to the board.
+     *
+     * @param step Step to be made.
+     * @return true if step is made, false otherwise
+     */
     boolean makeStep(Step step) {
         if (!isValidStep(step)) {
             return false;
@@ -315,6 +389,12 @@ public class Board {
         return true;
     }
 
+    /**
+     * Add the given piece at the given position on the board.
+     *
+     * @param piece Piece to be added to the board.
+     * @param pos   Position of the piece on the board.
+     */
     void addPieceAt(Piece piece, Square pos) {
         board[pos.x][pos.y] = piece;
         Step step = new Step(piece, pos, null, false, StepType.SIMPLE);
@@ -324,7 +404,7 @@ public class Board {
         moves.set(index, setupMove);
     }
 
-    boolean isValidStep(Step step) {
+    private boolean isValidStep(Step step) {
         if (step == null || step.piece == null || step.from == null) {
             return false;
         }
@@ -342,6 +422,12 @@ public class Board {
                 || getValidSteps(step.from).contains(step);
     }
 
+    /**
+     * Get valid steps for the given pieces' color.
+     *
+     * @param color Color of pieces.
+     * @return set of all valid steps for the given pieces' color
+     */
     public Set<Step> getValidSteps(Color color) {
         Set<Step> validSteps = new HashSet<>();
         for (int y = 0; y < HEIGHT; ++y) {
@@ -361,6 +447,12 @@ public class Board {
         return validSteps;
     }
 
+    /**
+     * Get all valid steps for the piece at the given position.
+     *
+     * @param from Position of the piece on the board.
+     * @return set of all valid steps for the piece at the given position
+     */
     Set<Step> getValidSteps(Square from) {
         if (!isPieceAt(from)) {
             return Collections.emptySet();
@@ -389,14 +481,28 @@ public class Board {
         return validSteps.contains(step);
     }
 
+    /**
+     * Finish making steps (for the purpose of distinguishing between different
+     * players).
+     */
     void finishMakingMove() {
         moves.add(new Move());
     }
 
+    /**
+     * Get last made move.
+     *
+     * @return last made move
+     */
     Move getLastMove() {
         return moves.isEmpty() ? null : moves.get(moves.size() - 1);
     }
 
+    /**
+     * Get previous non-removal step.
+     *
+     * @return previous non-removal step if any exists, null otherwise
+     */
     public Step getPreviousStep() {
         Move lastMove = getLastMove();
         for (int i = lastMove.getNumberOfSteps() - 1; i >= 0; --i) {
@@ -407,14 +513,6 @@ public class Board {
         }
 
         return null;
-    }
-
-    public Board getCopy() {
-        Board copied = new Board();
-        copied.board = Arrays.copyOf(board, board.length);
-        copied.moves.addAll(moves);
-
-        return copied;
     }
 
     private boolean rabbitReachedGoal(Color color) {
@@ -446,6 +544,14 @@ public class Board {
         return !getValidSteps(color).isEmpty();
     }
 
+    /**
+     * Get game result based on the current board's state and color of the
+     * previous player.
+     *
+     * @param player Color of previous player.
+     * @return game result based on the current board's state and color of the
+     * previous player
+     */
     GameResult getGameResult(Color player) {
         Color opponent = Color.getOpposingColor(player);
         GameResult playerWins = GameResult.fromColor(player);
