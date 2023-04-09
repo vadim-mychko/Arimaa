@@ -163,9 +163,10 @@ public class Game {
         GameResult result = board.getGameResult(previousPlayer);
         if (result != GameResult.NONE) {
             numberOfSteps = 0;
-            board.finishMakingMove();
             running = false;
             clock.stop();
+        } else {
+            running = true;
         }
 
         return result;

@@ -63,10 +63,13 @@ public class PGNLoader {
                     return null;
                 }
 
+                boolean hasParsedAnyStep = false;
                 for (String stepString : stepStrings) {
                     if (stepString == null || stepString.equals("")) {
                         continue;
                     }
+
+                    hasParsedAnyStep = true;
 
                     Step step = Step.fromString(stepString);
                     if (step == null) {
@@ -94,7 +97,7 @@ public class PGNLoader {
                     ++numberOfTurn;
                 }
 
-                if (!isInitialPhase && line != null && !line.equals("")) {
+                if (!isInitialPhase && hasParsedAnyStep) {
                     board.finishMakingMove();
                 }
             }
