@@ -61,6 +61,7 @@ public class Game {
     public void reset() {
         board.load();
         numberOfSteps = 0;
+        currentPlayer = Color.GOLD;
         clock.reset();
         isInitialPhase = true;
         running = true;
