@@ -4,11 +4,20 @@ import cz.cvut.fel.arimaa.model.Board;
 
 import java.util.Set;
 
+/**
+ * Class for representing elephant piece on a board.
+ */
 class Elephant extends Piece {
 
     private static final Elephant goldElephant = new Elephant(Color.GOLD);
     private static final Elephant silverElephant = new Elephant(Color.SILVER);
 
+    /**
+     * Get the (unique) instance of Elephant class based on the given color.
+     *
+     * @param color Color of the elephant.
+     * @return the (unique) instance of Elephant class based on the given color
+     */
     private Elephant(Color color) {
         super(color);
     }

@@ -4,6 +4,9 @@ import cz.cvut.fel.arimaa.model.Board;
 
 import java.util.Set;
 
+/**
+ * Class for representing rabbit piece on a board.
+ */
 class Rabbit extends Piece {
 
     private static final Direction[] goldDirections
@@ -18,6 +21,12 @@ class Rabbit extends Piece {
         super(color);
     }
 
+    /**
+     * Get the (unique) instance of Rabbit class based on the given color.
+     *
+     * @param color Color of the rabbit.
+     * @return the (unique) instance of Rabbit class based on the given color
+     */
     static Rabbit getInstance(Color color) {
         return color == Color.GOLD ? goldRabbit : silverRabbit;
     }

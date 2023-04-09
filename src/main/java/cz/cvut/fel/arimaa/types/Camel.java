@@ -4,6 +4,9 @@ import cz.cvut.fel.arimaa.model.Board;
 
 import java.util.Set;
 
+/**
+ * Class for representing camel piece on a board.
+ */
 class Camel extends Piece {
 
     private static final Camel goldCamel = new Camel(Color.GOLD);
@@ -13,6 +16,12 @@ class Camel extends Piece {
         super(color);
     }
 
+    /**
+     * Get the (unique) instance of Camel class based on the given color.
+     *
+     * @param color Color of the camel.
+     * @return the (unique) instance of Camel class based on the given color
+     */
     static Camel getInstance(Color color) {
         return color == Color.GOLD ? goldCamel : silverCamel;
     }

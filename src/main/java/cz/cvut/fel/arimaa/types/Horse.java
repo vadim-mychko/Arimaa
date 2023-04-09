@@ -4,6 +4,9 @@ import cz.cvut.fel.arimaa.model.Board;
 
 import java.util.Set;
 
+/**
+ * Class for representing horse piece on a board.
+ */
 class Horse extends Piece {
 
     private static final Horse goldHorse = new Horse(Color.GOLD);
@@ -13,6 +16,12 @@ class Horse extends Piece {
         super(color);
     }
 
+    /**
+     * Get the (unique) instance of Horse class based on the given color.
+     *
+     * @param color Color of the horse.
+     * @return the (unique) instance of Horse class based on the given color
+     */
     static Horse getInstance(Color color) {
         return color == Color.GOLD ? goldHorse : silverHorse;
     }

@@ -4,6 +4,9 @@ import cz.cvut.fel.arimaa.model.Board;
 
 import java.util.Set;
 
+/**
+ * Class for representing cat piece on a board.
+ */
 class Cat extends Piece {
 
     private static final Cat goldCat = new Cat(Color.GOLD);
@@ -13,6 +16,12 @@ class Cat extends Piece {
         super(color);
     }
 
+    /**
+     * Get the (unique) instance of Cat class based on the given color.
+     *
+     * @param color Color of the cat.
+     * @return the (unique) instance of Cat class based on the given color
+     */
     static Cat getInstance(Color color) {
         return color == Color.GOLD ? goldCat : silverCat;
     }

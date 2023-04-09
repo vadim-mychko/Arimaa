@@ -4,6 +4,9 @@ import cz.cvut.fel.arimaa.model.Board;
 
 import java.util.Set;
 
+/**
+ * Class for representing dog piece on a board.
+ */
 class Dog extends Piece {
 
     private static final Dog goldDog = new Dog(Color.GOLD);
@@ -13,6 +16,12 @@ class Dog extends Piece {
         super(color);
     }
 
+    /**
+     * Get the (unique) instance of Dog class based on the given color.
+     *
+     * @param color Color of the dog.
+     * @return the (unique) instance of Dog class based on the given color
+     */
     static Dog getInstance(Color color) {
         return color == Color.GOLD ? goldDog : silverDog;
     }

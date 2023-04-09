@@ -1,9 +1,18 @@
 package cz.cvut.fel.arimaa.types;
 
+/**
+ * Class for representing game results.
+ */
 public enum GameResult {
 
     GOLD_WIN, SILVER_WIN, NONE;
 
+    /**
+     * Get an instance of game result based on the color of the winner.
+     *
+     * @param color Color of the winner.
+     * @return instance of game result
+     */
     public static GameResult fromColor(Color color) {
         if (color == null) {
             return NONE;

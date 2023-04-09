@@ -4,25 +4,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Class for representing single move (multiple steps) on a board.
+ */
 public class Move {
 
+    /**
+     * Maximum number of valid steps for either player.
+     */
     public static final int MAX_LEGAL_STEPS = 4;
 
     private List<Step> steps;
 
+    /**
+     * Constructs an instance of move with zero steps.
+     */
     public Move() {
         steps = new ArrayList<>();
     }
 
-    public Move(List<Step> steps) {
-        this();
-        this.steps.addAll(steps);
-    }
-
+    /**
+     * Add the given step to the move.
+     *
+     * @param step Step to be added.
+     */
     public void addStep(Step step) {
         steps.add(step);
     }
 
+    /**
+     * Remove the last step in the move if possible.
+     *
+     * @return true if move has any steps to remove, false otherwise
+     */
     public boolean removeLastStep() {
         if (steps.isEmpty()) {
             return false;
@@ -32,27 +46,39 @@ public class Move {
         return true;
     }
 
+    /**
+     * Get number of non-removal steps in the move.
+     *
+     * @return number of non-removal steps in the move
+     */
     public int getNumberOfNonRemovalSteps() {
         return (int) steps.stream().filter(step -> !step.removed).count();
     }
 
-    public boolean removeStep(int index) {
-        if (index >= 0 && index < steps.size()) {
-            steps.remove(index);
-            return true;
-        }
-
-        return false;
-    }
-
+    /**
+     * Get total number of steps in the move.
+     *
+     * @return total number of steps in the move
+     */
     public int getNumberOfSteps() {
         return steps.size();
     }
 
+    /**
+     * Check if the move has any steps.
+     *
+     * @return true if the move has any steps, false otherwise
+     */
     public boolean hasSteps() {
         return !steps.isEmpty();
     }
 
+    /**
+     * Get the step by the given index.
+     *
+     * @param index Index of the step in the move (0-indexed).
+     * @return the step by the given index if index is in bounds, null otherwise
+     */
     public Step getStep(int index) {
         return index >= 0 && index < steps.size() ? steps.get(index) : null;
     }
