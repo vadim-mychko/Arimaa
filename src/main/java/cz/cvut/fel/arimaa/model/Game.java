@@ -50,6 +50,7 @@ public class Game {
         if (numberOfSteps <= 0) {
             numberOfSteps = board.getLastMove().getNumberOfNonRemovalSteps();
             currentPlayer = Color.getOpposingColor(currentPlayer);
+            clock.switchPlayer();
         } else {
             --numberOfSteps;
         }
