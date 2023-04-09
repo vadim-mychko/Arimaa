@@ -7,17 +7,18 @@ Made as a semester project for Java course.
 
 ## How to install & run
 
+For compiling & running the application Java 17+ is required.
+
 ### Linux
 
 ```bash
-chmod +x mvnw
-./mvnw clean javafx:run
+./mvnw javafx:run
 ```
 
 ### Windows
 
 ```bash
-mvnw.cmd clean javafx:run
+mvnw.cmd javafx:run
 ```
 
 ## How to play

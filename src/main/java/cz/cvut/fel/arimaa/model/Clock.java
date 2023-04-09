@@ -12,6 +12,7 @@ class Clock {
     private int silverTimeElapsed;
     private Color player;
     private boolean running;
+    private Thread thread;
 
     /**
      * Constructs an instance of clock. Starts running immediately.
@@ -35,7 +36,7 @@ class Clock {
     }
 
     private void start() {
-        Thread thread = new Thread(() -> {
+        thread = new Thread(() -> {
             while (running) {
                 try {
                     Thread.sleep(1000);
@@ -47,7 +48,6 @@ class Clock {
                         }
                     }
                 } catch (InterruptedException ignored) {
-
                 }
             }
         });
@@ -80,5 +80,9 @@ class Clock {
      */
     void stop() {
         running = false;
+        try {
+            thread.join();
+        } catch (InterruptedException ignored) {
+        }
     }
 }
