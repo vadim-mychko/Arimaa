@@ -1,6 +1,7 @@
 package cz.cvut.fel.arimaa.gui;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -25,6 +26,11 @@ public class App extends Application {
     public void start(Stage stage) {
         Scene scene = new Scene(new GameView());
         stage.setScene(scene);
+        stage.setOnCloseRequest(event -> {
+            Platform.exit();
+            System.exit(0);
+        });
+        
         stage.show();
     }
 }

@@ -26,6 +26,8 @@ class GameView extends BorderPane {
     private Text initialPhaseView;
     private Text numberOfStepsView;
     private Text gameResultView;
+    private Text goldTimeView;
+    private Text silverTimeView;
 
     GameView() {
         super();
@@ -37,6 +39,8 @@ class GameView extends BorderPane {
         this.initialPhaseView = new Text();
         this.numberOfStepsView = new Text();
         this.gameResultView = new Text();
+        this.goldTimeView = new Text();
+        this.silverTimeView = new Text();
         setMinSize(1200, 800);
         addBoardView();
         addButtons();
@@ -99,7 +103,8 @@ class GameView extends BorderPane {
         });
 
         setCenter(new VBox(gameTypeView, currentPlayerView, initialPhaseView,
-                numberOfStepsView, gameResultView, moveListView));
+                numberOfStepsView, gameResultView, moveListView,
+                goldTimeView, silverTimeView));
     }
 
     void update(Game game) {
@@ -109,6 +114,14 @@ class GameView extends BorderPane {
         numberOfStepsView.setText("Number of steps: " + game.getNumberOfSteps());
         gameResultView.setText("Game result: " + game.getGameResult());
         boardView.update(game.getBoard());
+
+        int goldTime = game.getTimeElapsed(Color.GOLD);
+        int silverTime = game.getTimeElapsed(Color.SILVER);
+
+        goldTimeView.setText("Gold time elapsed: "
+                + String.format("%d.%02d", goldTime / 60, goldTime % 60));
+        silverTimeView.setText("Silver time elapsed: "
+                + String.format("%d.%02d", silverTime / 60, silverTime % 60));
     }
 
     private class BoardView extends GridPane {

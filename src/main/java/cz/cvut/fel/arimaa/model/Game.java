@@ -10,6 +10,7 @@ public class Game {
     private int numberOfSteps;
     private Engine engine;
     private GameType gameType;
+    private Clock clock;
     private boolean isInitialPhase;
     private boolean running;
 
@@ -20,6 +21,7 @@ public class Game {
         currentPlayer = Color.GOLD;
         engine = new Engine(new RandomStrategy());
         gameType = GameType.HUMAN_HUMAN;
+        clock = new Clock();
         isInitialPhase = true;
         running = true;
     }
@@ -31,6 +33,7 @@ public class Game {
                 ? Color.SILVER : Color.GOLD;
         engine = new Engine(new RandomStrategy());
         gameType = GameType.HUMAN_HUMAN;
+        clock = new Clock();
         isInitialPhase = board.getNumberOfMoves() <= 2;
         running = true;
     }
@@ -57,8 +60,13 @@ public class Game {
     public void reset() {
         board.load();
         numberOfSteps = 0;
+        clock.reset();
         isInitialPhase = true;
         running = true;
+    }
+
+    public int getTimeElapsed(Color color) {
+        return clock.getTimeElapsed(color);
     }
 
     public boolean finishMakingSteps() {
@@ -68,9 +76,10 @@ public class Game {
                 isInitialPhase = false;
             }
 
-            currentPlayer = gameType == GameType.HUMAN_HUMAN
-                    ? Color.getOpposingColor(currentPlayer)
-                    : currentPlayer;
+            if (gameType == GameType.HUMAN_HUMAN) {
+                currentPlayer = Color.getOpposingColor(currentPlayer);
+                clock.switchPlayer();
+            }
 
             return true;
         }
@@ -82,11 +91,13 @@ public class Game {
 
         numberOfSteps = 0;
         board.finishMakingMove();
+        clock.switchPlayer();
 
         if (!isInitialPhase && gameType == GameType.HUMAN_COMPUTER) {
             Color engineColor = Color.getOpposingColor(currentPlayer);
             engine.makeMove(board, engineColor);
             board.finishMakingMove();
+            clock.switchPlayer();
         } else {
             currentPlayer = Color.getOpposingColor(currentPlayer);
         }
@@ -152,6 +163,7 @@ public class Game {
             numberOfSteps = 0;
             board.finishMakingMove();
             running = false;
+            clock.stop();
         }
 
         return result;
