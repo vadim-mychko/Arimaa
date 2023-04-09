@@ -7,12 +7,22 @@ import cz.cvut.fel.arimaa.types.Step;
 import java.io.*;
 import java.util.List;
 
+/**
+ * Class with static methods for loading/saving games in PGN format.
+ */
 public class PGNLoader {
 
     private PGNLoader() {
 
     }
 
+    /**
+     * Save the given game's content to the given file in PGN format.
+     *
+     * @param game Game to be saved into the given file.
+     * @param file File to be saved into.
+     * @return true on success, false otherwise
+     */
     public static boolean saveToFile(Game game, File file) {
         List<Move> moves = game.getMoves();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
@@ -35,6 +45,14 @@ public class PGNLoader {
         return true;
     }
 
+    /**
+     * Constructs a new logic model based on steps in PGN format from the given
+     * file. Tags are ignored and not maintained.
+     *
+     * @param file File of game moves in PGN format.
+     * @return instance of Game based on PGN content from the given file on
+     * success, null otherwise (if parsing fails)
+     */
     public static Game loadFromFile(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             // skip tags

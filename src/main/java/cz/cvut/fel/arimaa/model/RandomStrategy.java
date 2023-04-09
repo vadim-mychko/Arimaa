@@ -7,6 +7,9 @@ import cz.cvut.fel.arimaa.types.StepType;
 
 import java.util.*;
 
+/**
+ * Random strategy makes random 1-4 valid steps.
+ */
 class RandomStrategy implements Strategy {
 
     private Step getRandomStep(Set<Step> steps) {
@@ -15,6 +18,12 @@ class RandomStrategy implements Strategy {
         return list.get(0);
     }
 
+    /**
+     * Makes random 1-4 valid steps to the given board.
+     *
+     * @param board Board for making valid steps to.
+     * @param color Color of engine's figures.
+     */
     @Override
     public void makeMove(Board board, Color color) {
         int numberOfSteps = new Random().nextInt(Move.MAX_LEGAL_STEPS - 1) + 1;
