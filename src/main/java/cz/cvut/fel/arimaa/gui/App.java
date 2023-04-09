@@ -8,8 +8,18 @@ import javafx.stage.Stage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Starting point of the application.
+ */
 public class App extends Application {
 
+    /**
+     * Parses the given parameters and launches graphical user interface of
+     * the application.
+     *
+     * @param args Arguments of the program. If --log is present, logging
+     *             messages on INFO level are enabled.
+     */
     public static void main(String[] args) {
         boolean logsEnabled = args.length > 0 && args[0].equals("--log");
         if (logsEnabled) {
@@ -22,6 +32,11 @@ public class App extends Application {
         launch(args);
     }
 
+    /**
+     * Sets the main window of the application to show the game graphics.
+     *
+     * @param stage Main window of the application.
+     */
     @Override
     public void start(Stage stage) {
         Scene scene = new Scene(new GameView());
@@ -30,7 +45,7 @@ public class App extends Application {
             Platform.exit();
             System.exit(0);
         });
-        
+
         stage.show();
     }
 }

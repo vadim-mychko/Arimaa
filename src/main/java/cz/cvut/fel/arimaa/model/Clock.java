@@ -29,9 +29,9 @@ class Clock {
                     Thread.sleep(1000);
                     synchronized (lock) {
                         if (player == Color.GOLD) {
-                            goldTimeElapsed += 1;
+                            ++goldTimeElapsed;
                         } else {
-                            silverTimeElapsed += 1;
+                            ++silverTimeElapsed;
                         }
                     }
                 } catch (InterruptedException ignored) {

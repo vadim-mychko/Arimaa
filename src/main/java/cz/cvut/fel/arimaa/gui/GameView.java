@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * GUI for the logic model for the user to interact with.
+ */
 class GameView extends BorderPane {
 
     ListView<Move> moveListView;
@@ -29,6 +32,10 @@ class GameView extends BorderPane {
     private Text goldTimeView;
     private Text silverTimeView;
 
+    /**
+     * Constructs an instance of view with a newly constructed controller for
+     * sending events to.
+     */
     GameView() {
         super();
         this.controller = new GameController(this);
@@ -78,6 +85,13 @@ class GameView extends BorderPane {
         setTop(new HBox(newGame, makeMove, undoStep, gameType, loadPGN, savePGN));
     }
 
+    /**
+     * Sets the view of made steps to the new observable list.
+     * Needed for loading PGN with a new logic model and passing its observable
+     * list of moves the existing view.
+     *
+     * @param observableMoves List of observable list for the logic model.
+     */
     void setMoveListView(ObservableList<Move> observableMoves) {
         moveListView.setItems(observableMoves);
     }
@@ -109,6 +123,12 @@ class GameView extends BorderPane {
                 goldTimeView, silverTimeView));
     }
 
+    /**
+     * Updates the graphical content within the view based on the state of
+     * the given logic model.
+     *
+     * @param game Logic model for updating graphical content with.
+     */
     void update(Game game) {
         gameTypeView.setText("Game type: " + game.getGameType());
         currentPlayerView.setText("Current player: " + game.getCurrentPlayer());
@@ -131,6 +151,9 @@ class GameView extends BorderPane {
         private Map<String, Image> images;
         private ImageView[][] tiles;
 
+        /**
+         * Constructs an instance of board view for any board.
+         */
         BoardView() {
             super();
             images = new HashMap<>();
@@ -182,6 +205,11 @@ class GameView extends BorderPane {
             return images.get(pieceName);
         }
 
+        /**
+         * Updates the graphical representation with the given board.
+         *
+         * @param board Board for updating its graphical representation.
+         */
         void update(Board board) {
             for (int y = 0; y < Board.HEIGHT; ++y) {
                 for (int x = 0; x < Board.WIDTH; ++x) {
