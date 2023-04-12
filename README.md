@@ -25,6 +25,8 @@ mvnw.cmd javafx:run
 
 To start a new game, click "New Game" button.
 
+To arrange pieces in the initial phase, click one on a piece and then click on
+another piece, which results in swapping.
 Move pieces by clicking on the square you want to the piece from, then
 click on the destination square. If the desired step is valid, it is made and
 the view is updated accordingly. To do undo the previous step, click "Undo Step"
